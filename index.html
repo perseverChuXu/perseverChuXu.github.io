@@ -337,191 +337,6 @@
             
               
                 
-                <a class="post-title-link" href="/2015/10/20/项目管理Git的常用命令/" itemprop="url">
-                  项目管理Git常用命令
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-10-20T19:22:17+08:00" content="2015-10-20">
-              2015-10-20
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="项目管理Git常用命令"><a href="#项目管理Git常用命令" class="headerlink" title="项目管理Git常用命令"></a>项目管理Git常用命令</h1><h3 id="Git是一个很强大的分布式版本控制系统-它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。"><a href="#Git是一个很强大的分布式版本控制系统-它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。" class="headerlink" title="Git是一个很强大的分布式版本控制系统,它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。"></a>Git是一个很强大的分布式版本控制系统,它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。</h3><p>Git常用操作命令：</p>
-<p>1) 远程仓库相关命令<br>检出仓库：$ git clone git://github.com/jQuery/jquery.git</p>
-<p>查看远程仓库：$ git remote -v</p>
-<p>添加远程仓库：$ git remote add [name] [url]</p>
-<p>删除远程仓库：$ git remote rm [name]</p>
-<p>修改远程仓库：$ git remote set-url –push [name] [newUrl]</p>
-<p>拉取远程仓库：$ git pull [remoteName] [localBranchName]</p>
-<p>推送远程仓库：$ git push [remoteName] [localBranchName]</p>
-<p>如果想把本地的某个分支test提交到远程仓库，并作为远程仓库的master分支，或者作为另外一个名叫test的分支，如下：<br>$git push origin test:master // 提交本地test分支作为远程的master分支<br>$git push origin test:test // 提交本地test分支作为远程的test分支<br>2）分支(branch)操作相关命令<br>查看本地分支：$ git branch</p>
-<p>查看远程分支：$ git branch -r</p>
-<p>创建本地分支：$ git branch [name] —-注意新分支创建后不会自动切换为当前分支</p>
-<p>切换分支：$ git checkout [name]</p>
-<p>创建新分支并立即切换到新分支：$ git checkout -b [name]</p>
-<p>删除分支：$ git branch -d [name] —- -d选项只能删除已经参与了合并的分支，对于未有合并的分支是无法删除的。如果想强制删除一个分支，可以使用-D选项</p>
-<p>合并分支：$ git merge [name] —-将名称为[name]的分支与当前分支合并</p>
-<p>创建远程分支(本地分支push到远程)：$ git push origin [name]</p>
-<p>删除远程分支：$ git push origin :heads/[name] 或 $ gitpush origin :[name]</p>
-<p>*创建空的分支：(执行命令之前记得先提交你当前分支的修改，否则会被强制删干净没得后悔)</p>
-<p>$git symbolic-ref HEAD refs/heads/[name]</p>
-<p>$rm .git/index</p>
-<p>$git clean -fdx<br>3）版本(tag)操作相关命令<br>查看版本：$ git tag</p>
-<p>创建版本：$ git tag [name]</p>
-<p>删除版本：$ git tag -d [name]</p>
-<p>查看远程版本：$ git tag -r</p>
-<p>创建远程版本(本地版本push到远程)：$ git push origin [name]</p>
-<p>删除远程版本：$ git push origin :refs/tags/[name]</p>
-<p>合并远程仓库的tag到本地：$ git pull origin –tags</p>
-<p>上传本地tag到远程仓库：$ git push origin –tags</p>
-<p>创建带注释的tag：$ git tag -a [name] -m ‘yourMessage’<br>4) 子模块(submodule)相关操作命令</p>
-<p>添加子模块：$ git submodule add [url] [path]<br>如：$git submodule add git://github.com/soberh/ui-libs.git src/main/webapp/ui-libs</p>
-<p>初始化子模块：$ git submodule init —-只在首次检出仓库时运行一次就行</p>
-<p>更新子模块：$ git submodule update —-每次更新或切换分支后都需要运行一下</p>
-<p>删除子模块：（分4步走哦）</p>
-<p>1) $ git rm –cached [path]</p>
-<p>2) 编辑“.gitmodules”文件，将子模块的相关配置节点删除掉</p>
-<p>3) 编辑“ .git/config”文件，将子模块的相关配置节点删除掉</p>
-<p>4) 手动删除子模块残留的目录</p>
-<p>5）忽略一些文件、文件夹不提交<br>在仓库根目录下创建名称为“.gitignore”的文件，写入不需要的文件夹名或文件，每个元素占一行即可，如<br>target<br>bin<br>*.db<br>Git 常用命令</p>
-<p>git branch 查看本地所有分支</p>
-<p>git status 查看当前状态</p>
-<p>git commit 提交</p>
-<p>git branch -a 查看所有的分支</p>
-<p>git branch -r 查看本地所有分支</p>
-<p>git commit -am “init” 提交并且加注释</p>
-<p>git remote add origin git@192.168.1.119:ndshow</p>
-<p>git push origin master 将文件给推到服务器上</p>
-<p>git remote show origin 显示远程库origin里的资源</p>
-<p>git push origin master:develop</p>
-<p>git push origin master:hb-dev 将本地库与服务器上的库进行关联</p>
-<p>git checkout –track origin/dev 切换到远程dev分支</p>
-<p>git branch -D master develop 删除本地库develop</p>
-<p>git checkout -b dev 建立一个新的本地分支dev</p>
-<p>git merge origin/dev 将分支dev与当前分支进行合并</p>
-<p>git checkout dev 切换到本地dev分支</p>
-<p>git remote show 查看远程库</p>
-<p>git add .</p>
-<p>git rm 文件名(包括路径) 从git中删除指定文件</p>
-<p>git clone git://github.com/schacon/grit.git 从服务器上将代码给拉下来</p>
-<p>git config –list 看所有用户</p>
-<p>git ls-files 看已经被提交的</p>
-<p>git rm [file name] 删除一个文件</p>
-<p>git commit -a 提交当前repos的所有的改变</p>
-<p>git add [file name] 添加一个文件到git index</p>
-<p>git commit -v 当你用－v参数的时候可以看commit的差异</p>
-<p>git commit -m “This is the message describing the<br>commit” 添加commit信息</p>
-<p>git commit -a -a是代表add，把所有的change加到git index里然后再commit</p>
-<p>git commit -a -v 一般提交命令</p>
-<p>git log 看你commit的日志</p>
-<p>git diff 查看尚未暂存的更新</p>
-<p>git rm a.a 移除文件(从暂存区和工作区中删除)</p>
-<p>git rm –cached a.a 移除文件(只从暂存区中删除)</p>
-<p>git commit -m “remove” 移除文件(从Git中删除)</p>
-<p>git rm -f a.a 强行移除修改后文件(从暂存区和工作区中删除)</p>
-<p>git diff –cached 或 $ git diff –staged 查看尚未提交的更新</p>
-<p>git stash push 将文件给push到一个临时空间中</p>
-<p>git stash pop 将文件从临时空间pop下来</p>
-<p>git remote add origin git@github.com:username/Hello-World.git</p>
-<p>git push origin master 将本地项目给提交到服务器中</p>
-<p>git pull 本地与服务器端同步<br>git push (远程仓库名) (分支名) 将本地分支推送到服务器上去。<br>git push origin serverfix:awesomebranch</p>
-<p>git fetch 相当于是从远程获取最新版本到本地，不会自动merge</p>
-<p>git commit -a -m “log_message” (-a是提交所有改动，-m是加入log信息) 本地修改同步至服务器端 ：</p>
-<p>git branch branch_0.1 master 从主分支master创建branch_0.1分支</p>
-<p>git branch -m branch_0.1 branch_1.0 将branch_0.1重命名为branch_1.0</p>
-<p>git checkout branch_1.0/master 切换到branch_1.0/master分支<br>du -hs</p>
-<p>mkdir WebApp</p>
-<p>cd WebApp</p>
-<p>git init</p>
-<p>touch README</p>
-<p>git add README</p>
-<p>git commit -m ‘first commit’</p>
-<p>git remote add origin git@github.com:daixu/WebApp.git</p>
-<p>git push -u origin master</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2015/07/12/地图定位CoreLocation框架的使用(2)/" itemprop="url">
                   地图定位CoreLocation框架的使用(2)
                 </a>
@@ -777,8 +592,8 @@ self.locationM.delegate = self;
             
               
                 
-                <a class="post-title-link" href="/2015/06/11/CocoaPods的使用/" itemprop="url">
-                  CocoaPods的使用
+                <a class="post-title-link" href="/2015/06/20/项目管理Git的常用命令/" itemprop="url">
+                  项目管理Git常用命令
                 </a>
               
             
@@ -791,8 +606,8 @@ self.locationM.delegate = self;
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-06-11T22:51:17+08:00" content="2015-06-11">
-              2015-06-11
+            <time itemprop="dateCreated" datetime="2015-06-20T19:32:17+08:00" content="2015-06-20">
+              2015-06-20
             </time>
           </span>
 
@@ -821,31 +636,98 @@ self.locationM.delegate = self;
       
         
           
-            <h1 id="CocoaPods的使用"><a href="#CocoaPods的使用" class="headerlink" title="CocoaPods的使用"></a>CocoaPods的使用</h1><ul>
-<li>Podfile.lock文件<ul>
-<li>最后一次更新Pods时, 所有第三方框架的版本号</li>
-</ul>
-</li>
-<li>常用指令的区别<ul>
-<li>pod install<ul>
-<li>会根据Podfile.lock文件中列举的版本号来安装第三方框架</li>
-<li>如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架</li>
-<li>安装框架之前, 默认会执行pod repo update指令</li>
-</ul>
-</li>
-<li>pod update<ul>
-<li>将所有第三方框架更新到最新版本, 并且创建一个新的Podfile.lock文件</li>
-<li>安装框架之前, 默认会执行pod repo update指令</li>
-</ul>
-</li>
-<li>pod install –no-repo-update</li>
-<li>pod update –no-repo-update<ul>
-<li>安装框架之前, 不会执行pod repo update指令”</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+            <h1 id="项目管理Git常用命令"><a href="#项目管理Git常用命令" class="headerlink" title="项目管理Git常用命令"></a>项目管理Git常用命令</h1><h3 id="Git是一个很强大的分布式版本控制系统-它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。"><a href="#Git是一个很强大的分布式版本控制系统-它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。" class="headerlink" title="Git是一个很强大的分布式版本控制系统,它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。"></a>Git是一个很强大的分布式版本控制系统,它不但适用于管理大型开源软件的源代码，管理私人的文档和源代码也有很多优势。</h3><p>Git常用操作命令：</p>
+<p>1) 远程仓库相关命令<br>检出仓库：$ git clone git://github.com/jQuery/jquery.git</p>
+<p>查看远程仓库：$ git remote -v</p>
+<p>添加远程仓库：$ git remote add [name] [url]</p>
+<p>删除远程仓库：$ git remote rm [name]</p>
+<p>修改远程仓库：$ git remote set-url –push [name] [newUrl]</p>
+<p>拉取远程仓库：$ git pull [remoteName] [localBranchName]</p>
+<p>推送远程仓库：$ git push [remoteName] [localBranchName]</p>
+<p>如果想把本地的某个分支test提交到远程仓库，并作为远程仓库的master分支，或者作为另外一个名叫test的分支，如下：<br>$git push origin test:master // 提交本地test分支作为远程的master分支<br>$git push origin test:test // 提交本地test分支作为远程的test分支<br>2）分支(branch)操作相关命令<br>查看本地分支：$ git branch</p>
+<p>查看远程分支：$ git branch -r</p>
+<p>创建本地分支：$ git branch [name] —-注意新分支创建后不会自动切换为当前分支</p>
+<p>切换分支：$ git checkout [name]</p>
+<p>创建新分支并立即切换到新分支：$ git checkout -b [name]</p>
+<p>删除分支：$ git branch -d [name] —- -d选项只能删除已经参与了合并的分支，对于未有合并的分支是无法删除的。如果想强制删除一个分支，可以使用-D选项</p>
+<p>合并分支：$ git merge [name] —-将名称为[name]的分支与当前分支合并</p>
+<p>创建远程分支(本地分支push到远程)：$ git push origin [name]</p>
+<p>删除远程分支：$ git push origin :heads/[name] 或 $ gitpush origin :[name]</p>
+<p>*创建空的分支：(执行命令之前记得先提交你当前分支的修改，否则会被强制删干净没得后悔)</p>
+<p>$git symbolic-ref HEAD refs/heads/[name]</p>
+<p>$rm .git/index</p>
+<p>$git clean -fdx<br>3）版本(tag)操作相关命令<br>查看版本：$ git tag</p>
+<p>创建版本：$ git tag [name]</p>
+<p>删除版本：$ git tag -d [name]</p>
+<p>查看远程版本：$ git tag -r</p>
+<p>创建远程版本(本地版本push到远程)：$ git push origin [name]</p>
+<p>删除远程版本：$ git push origin :refs/tags/[name]</p>
+<p>合并远程仓库的tag到本地：$ git pull origin –tags</p>
+<p>上传本地tag到远程仓库：$ git push origin –tags</p>
+<p>创建带注释的tag：$ git tag -a [name] -m ‘yourMessage’<br>4) 子模块(submodule)相关操作命令</p>
+<p>添加子模块：$ git submodule add [url] [path]<br>如：$git submodule add git://github.com/soberh/ui-libs.git src/main/webapp/ui-libs</p>
+<p>初始化子模块：$ git submodule init —-只在首次检出仓库时运行一次就行</p>
+<p>更新子模块：$ git submodule update —-每次更新或切换分支后都需要运行一下</p>
+<p>删除子模块：（分4步走哦）</p>
+<p>1) $ git rm –cached [path]</p>
+<p>2) 编辑“.gitmodules”文件，将子模块的相关配置节点删除掉</p>
+<p>3) 编辑“ .git/config”文件，将子模块的相关配置节点删除掉</p>
+<p>4) 手动删除子模块残留的目录</p>
+<p>5）忽略一些文件、文件夹不提交<br>在仓库根目录下创建名称为“.gitignore”的文件，写入不需要的文件夹名或文件，每个元素占一行即可，如<br>target<br>bin<br>*.db<br>Git 常用命令</p>
+<p>git branch 查看本地所有分支</p>
+<p>git status 查看当前状态</p>
+<p>git commit 提交</p>
+<p>git branch -a 查看所有的分支</p>
+<p>git branch -r 查看本地所有分支</p>
+<p>git commit -am “init” 提交并且加注释</p>
+<p>git remote add origin git@192.168.1.119:ndshow</p>
+<p>git push origin master 将文件给推到服务器上</p>
+<p>git remote show origin 显示远程库origin里的资源</p>
+<p>git push origin master:develop</p>
+<p>git push origin master:hb-dev 将本地库与服务器上的库进行关联</p>
+<p>git checkout –track origin/dev 切换到远程dev分支</p>
+<p>git branch -D master develop 删除本地库develop</p>
+<p>git checkout -b dev 建立一个新的本地分支dev</p>
+<p>git merge origin/dev 将分支dev与当前分支进行合并</p>
+<p>git checkout dev 切换到本地dev分支</p>
+<p>git remote show 查看远程库</p>
+<p>git add .</p>
+<p>git rm 文件名(包括路径) 从git中删除指定文件</p>
+<p>git clone git://github.com/schacon/grit.git 从服务器上将代码给拉下来</p>
+<p>git config –list 看所有用户</p>
+<p>git ls-files 看已经被提交的</p>
+<p>git rm [file name] 删除一个文件</p>
+<p>git commit -a 提交当前repos的所有的改变</p>
+<p>git add [file name] 添加一个文件到git index</p>
+<p>git commit -v 当你用－v参数的时候可以看commit的差异</p>
+<p>git commit -m “This is the message describing the<br>commit” 添加commit信息</p>
+<p>git commit -a -a是代表add，把所有的change加到git index里然后再commit</p>
+<p>git commit -a -v 一般提交命令</p>
+<p>git log 看你commit的日志</p>
+<p>git diff 查看尚未暂存的更新</p>
+<p>git rm a.a 移除文件(从暂存区和工作区中删除)</p>
+<p>git rm –cached a.a 移除文件(只从暂存区中删除)</p>
+<p>git commit -m “remove” 移除文件(从Git中删除)</p>
+<p>git rm -f a.a 强行移除修改后文件(从暂存区和工作区中删除)</p>
+<p>git diff –cached 或 $ git diff –staged 查看尚未提交的更新</p>
+<p>git stash push 将文件给push到一个临时空间中</p>
+<p>git stash pop 将文件从临时空间pop下来</p>
+<p>git remote add origin git@github.com:username/Hello-World.git</p>
+<p>git push origin master 将本地项目给提交到服务器中</p>
+<p>git pull 本地与服务器端同步<br>git push (远程仓库名) (分支名) 将本地分支推送到服务器上去。<br>git push origin serverfix:awesomebranch</p>
+<p>git fetch 相当于是从远程获取最新版本到本地，不会自动merge</p>
+<p>git commit -a -m “log_message” (-a是提交所有改动，-m是加入log信息) 本地修改同步至服务器端 ：</p>
+<p>git branch branch_0.1 master 从主分支master创建branch_0.1分支</p>
+<p>git branch -m branch_0.1 branch_1.0 将branch_0.1重命名为branch_1.0</p>
+<p>git checkout branch_1.0/master 切换到branch_1.0/master分支<br>du -hs</p>
+<p>mkdir WebApp</p>
+<p>cd WebApp</p>
+<p>git init</p>
+<p>touch README</p>
+<p>git add README</p>
+<p>git commit -m ‘first commit’</p>
+<p>git remote add origin git@github.com:daixu/WebApp.git</p>
+<p>git push -u origin master</p>
 
           
         
@@ -895,7 +777,7 @@ self.locationM.delegate = self;
             
               
                 
-                <a class="post-title-link" href="/2015/06/11/CocoaPods的使用副本/" itemprop="url">
+                <a class="post-title-link" href="/2015/06/11/CocoaPods的使用/" itemprop="url">
                   CocoaPods的使用
                 </a>
               
@@ -1033,7 +915,7 @@ self.locationM.delegate = self;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">5</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
