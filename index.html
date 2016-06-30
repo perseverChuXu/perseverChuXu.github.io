@@ -233,6 +233,419 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/30/Mutipeer Connectivity/" itemprop="url">
+                  蓝牙交互-Mutipeer Connectivity
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-30T20:13:08+08:00" content="2016-06-30">
+              2016-06-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#Mutipeer Connectivity简介<br>iOS 7引入的一个全新框架 多点连接<br>替代GameKit框架 多用于文件的传输 </p>
+<p>#iOS设备不联网也能跟附近的人聊天<br>FireChat<br>See You Around<br>以上聊天App都是基于mutipeerConnectivity框架</p>
+<p>#搜索和传输的方式<br>双方WIFI和蓝牙都没有打开:无法实现<br>双方都开启蓝牙:通过蓝牙发现和传输<br>双方都开启WIFI:通过WIFI Direct发现和传输,速度接近AirDrop 双方同时开启了WIFI和蓝牙:模拟AirDrop,通过低功耗蓝牙技术扫描发现握手, 然后通过WIFI Direct传输</p>
+<p>#实际使用<br>连接设备</p>
+<p>#1.创建MCSession对象用于存放当前连接的会话<br>创建MCSession对象<br>initWithPeer:设备的ID<br>用于存放当前的连接的会话<br>self.mc_Session = [ [MCSession alloc]initWithPeer:[[MCPeerID alloc] initWithD<br>  开启广播对象,通知正在搜索的设备他们是可用的</p>
+<p>只要开启了可被搜索的广播,那么连接蓝牙按钮就不可点 </p>
+<ul>
+<li>(IBAction)foundConnect:(id)sender {<br>  UISwitch <em>switchBtn = (UISwitch </em>)sender;<br>  if (switchBtn.isOn) {// 广播对象,告诉其它的设备他们是可用的<br>if (self.advertiserAssistant == nil) {<br>// 创建广播对象<br>// initWithServiceType: 广播类型的标示(因为广播可能比较多,所以最好每 // session:当前会话<br>// discoveryInfo: 广播信息<br>self.advertiserAssistant = [[MCAdvertiserAssistant alloc] initWit<br>}<br>// 开启广播 [self.advertiserAssistant start]; self.connectBT.enabled = NO;<br>  }else{<pre><code>self.connectBT.enabled = YES;
+</code></pre>} }<br>#2.开始搜索蓝牙设备</li>
+<li>(IBAction)connectBlueTooth {<br>// 创建搜索蓝牙设备控制器<br>MCBrowserViewController *mbVC = [[MCBrowserViewController alloc]initWithS // 设置控制器代理<br>mbVC.delegate = self;<br>// 跳转到搜索控制器<br>[self presentViewController:mbVC animated:YES completion:nil];<br>}<br>选择数据</li>
+<li>(IBAction)selectImage {</li>
+</ul>
+<ol>
+<li>创建图片选择器<br>UIImagePickerController *imgPicker = [[UIImagePickerController alloc]init // 2. 判断图片选择器是否可用<br>if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControlle<br>// 选择器打开的类型<br>imgPicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAl // 设置代理<br>imgPicker.delegate = self;</li>
+<li>打开图片选择器<br>[self presentViewController:imgPicker animated:YES completion:nil];<br>} }<br>图片选择器代理中获取数据<br>// 选择完毕调用</li>
+</ol>
+<ul>
+<li>(void)imagePickerController:(UIImagePickerController *)picker didFinishPick {<br>//<br>NSLog(@”info == %@”,info);<br>// 设置显示图片<br>self.showImage.image = info[UIImagePickerControllerOriginalImage]; // 隐藏图片显示器<br>[picker dismissViewControllerAnimated:YES completion:nil];<br>}<br>#在搜索控制器的连接完成的代理方法中隐藏搜索控制器<br>连接完成<br>@param browserViewController 搜索控制器 </li>
+<li><p>(void)browserViewControllerDidFinish:(MCBrowserViewController <em>)browserView<br>{<br>  [browserViewController dismissViewControllerAnimated:YES completion:nil];<br>  NSLog(@”%s %d”,<strong>func</strong>,<strong>LINE</strong>);<br>}<br>发送数据<br>实现搜索控制器的代理方法,获取连接上的设备ID<br>#pragma mark - MCBrowserViewControllerDelegate<br>/*</em></p>
+<h1 id="连接成功"><a href="#连接成功" class="headerlink" title="连接成功"></a>连接成功</h1><p>@param browserViewController 搜索控制器<br>在搜索控制器的连接完成的代理方法中隐藏搜索控制器<br>@param peerID<br>@param info<br>@return<br>连接上的设备ID 连接的信息<br>YES : 只发送连接上的用户</p>
+</li>
+<li><p>(BOOL)browserViewController:(MCBrowserViewController *)browserViewControlle</p>
+<pre><code>shouldPresentNearbyPeer:(MCPeerID *)peerID
+      withDiscoveryInfo:(nullable NSDictionary&lt;NSString *, NSString *&gt;
+</code></pre><p>{<br>  self.peerID = peerID;<br>  NSLog(@”info == %@<br>return YES; }<br>将图片发送给连接上的ID</p>
+</li>
+<li>(IBAction)sendImage { // 获取图片<br>peer = %@”,info, peerID);<br>UIImage <em>image = self.showImage.image;<br>// 将图片转换成NSData类型<br>NSData </em>data = UIImagePNGRepresentation(image);<br>发送数据<br>toPeers : 发给的设备ID的数组<br>withMode: 发送模式,是否是安全模式 */<br>  if (self.peerID != nil) {<pre><code>[self.mc_Session sendData:data toPeers:@[self.peerID] withMode:MCSess
+</code></pre>} }</li>
+</ul>
+<p>#接收数据</p>
+<p>实现MCSession的代理方法接受数据</p>
+<ul>
+<li>(void)session:(MCSession <em>)session didReceiveData:(NSData </em>)data fromPeer:(<br>{<br>  NSLog(@”%s %d”,<strong>func</strong>,<strong>LINE</strong>);<br>  NSLog(@”data = %@ , peer = %@”,data,peerID);<br>}</li>
+</ul>
+<p>#显示数据<br>在MCSeesion代理方法中设置获取过来的数据<br>   接收的数据</p>
+<ul>
+<li>(void)session:(MCSession <em>)session didReceiveData:(NSData </em>)data fromPeer:( {<br>//<br>NSLog(@”%s %d”,<strong>func</strong>,<strong>LINE</strong>);<br>NSLog(@”data = %@ , peer = %@”,data,peerID);<br>UIImage *image = [[UIImage alloc]initWithData:data];<br>if(image != nil){<br>// 设置数据 dispatch_async(dispatch_get_main_queue(), ^{<pre><code>self.showImage.image = image;
+</code></pre>  });<br>} }</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/30/CoreBlueTooth/" itemprop="url">
+                  蓝牙交互-CoreBlueTooth
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-30T11:23:14+08:00" content="2016-06-30">
+              2016-06-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#CoreBlueTooth简介<br>可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上<br>iPad设备必须是iPad mini及以上<br>iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试</p>
+<p>#应用场景<br>     运动手环<br>     智能家居<br>     拉卡拉蓝牙刷卡器</p>
+<p>#核心概念<br>CBCentralManager:中心设备(用来连接到外部设备的管家) CBPeripheralManager:外部设备(第三方的蓝牙4.0设备)</p>
+<p>#实际使用<br>  建立中心管家</p>
+<p>#1. 创建中心管家,并且设置代理<br>self.cmgr = [[CBCentralManager alloc]initWithDelegate:self queue:nil];<br>扫描外设(discover)</p>
+<p>#2. 在代理方法中扫描外部设备 /<em>*<br>scanForPeripheralsWithServices :如果传入指定的数组,那么就只会扫描数组中对应ID </em> 如果传入nil,那么就是扫描所有可以发现的设备<br> 扫描完外部设备就会通知CBCentralManager的代理</p>
+<ul>
+<li>(void)centralManagerDidUpdateState:(CBCentralManager *)central<br>{<br> if ([central state] == CBCentralManagerStatePoweredOn) {<pre><code>[self.cmgr scanForPeripheralsWithServices:nil options:nil];
+</code></pre>} }</li>
+</ul>
+<hr>
+<p>发现外部设备,每发现一个就会调用这个方法<br>所以可以使用一个数组来存储每次扫描完成的数组 </p>
+<ul>
+<li>(void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBP<br>{<br>// 有可能会导致重复添加扫描到的外设<br>// 所以需要先判断数组中是否包含这个外设 if(![self.peripherals containsObject:peripheral]){<pre><code>[self.peripherals addObject:peripheral];
+</code></pre>  }<br>}<br>连接外设</li>
+</ul>
+<ul>
+<li>模拟开始连接方法 */</li>
+</ul>
+<ul>
+<li>(void)start<br>{<br>#3. 连接外设<br>for (CBPeripheral *ppl in self.peripherals) { // 扫描外设的服务<br>// 这个操作应该交给外设的代理方法来做<br>// 设置代理<br>ppl.delegate = self;<br>[self.cmgr connectPeripheral:ppl options:nil];<br>} }<br>扫描外设中的服务和特征<br>#服务和特征的关系<br>每个蓝牙4.0的设备都是通过服务和特征来展示自己的,一个设备必然包含一个或 多个服务,每个服务下面又包含若干个特征。</li>
+</ul>
+<p>#连接外设成功调用</p>
+<ul>
+<li>(void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPe<br>{<br>// 查找外设服务<br>  [peripheral discoverServices:nil];<br>}</li>
+</ul>
+<h1 id="发现服务就会调用代理方法"><a href="#发现服务就会调用代理方法" class="headerlink" title="发现服务就会调用代理方法 *"></a>发现服务就会调用代理方法 *</h1><p> @param peripheral 外设 */</p>
+<ul>
+<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverServices:(NSError </em>)<br>{<br>// 扫描到设备的所有服务<br>NSArray <em>services = peripheral.services; // 根据服务再次扫描每个服务对应的特征<br>for (CBService </em>ses in services) {<pre><code>[peripheral discoverCharacteristics:nil forService:ses];
+</code></pre>  }<br>}</li>
+</ul>
+<h1 id="发现服务对应的特征"><a href="#发现服务对应的特征" class="headerlink" title="发现服务对应的特征"></a>发现服务对应的特征</h1><ul>
+<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverCharacteristicsForSe<br>{<br>// 服务对应的特征<br>NSArray </em>ctcs = service.characteristics; // 遍历所有的特征<br>for (CBCharacteristic *character in ctcs) {<br>// 根据特征的唯一标示过滤<br>if ([character.UUID.UUIDString isEqualToString:@”XMG”]) {<br>NSLog(@”可以吃饭了”); }<br>} }<br>#断开连接</li>
+<li>(void)stop<br>与外设做数据交互<br>在指定的特征下做相应的操作<br>  Chapter-20(I)蓝牙交互CoreBlueTooth 151<br>r<br>e<br>r<br>MISSAJJ IOSDevelopment GitBook<br>{<br>// 断开所有连接上的外设<br>for (CBPeripheral *per in self.peripherals) {<pre><code>[self.cmgr cancelPeripheralConnection:per];
+</code></pre>  }<br>}</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/06/30/蓝牙初步分析/" itemprop="url">
+                  蓝牙初步分析
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-30T06:23:14+08:00" content="2016-06-30">
+              2016-06-30
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#蓝牙分为GameKit(iOS7以后过期了) / Mutipeer Connectivity 和 CoreBluetooth三种框架</p>
+<p>#1.获取照片<br>// 1.判断相册是否可用<br>if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) {<br>    NSLog(@”相册不可用”);<br>    return;<br>}<br>// 2.创建控制器<br>UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];<br>// 3.设置照片来源<br>imagePickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;<br>// 4.设置代理<br>imagePickerController.delegate = self;<br>// 5.弹出控制器<br>[self presentViewController:imagePickerController animated:YES completion:nil];</p>
+<p>在代理方法imagePickerController: didFinishPickingMediaWithInfo:中可以获取到用户选择的照片<br>self.imageView.image = info[UIImagePickerControllerOriginalImage];</p>
+<p>#2.搜索设备–&gt;弹出蓝牙连接控制器<br>// 1.创建蓝牙连接控制器<br>GKPeerPickerController *peerPickerController = [[GKPeerPickerController alloc] init];</p>
+<p>// 2.设置代理<br>peerPickerController.delegate = self;<br>// 3.显示控制器<br>[peerPickerController show];</p>
+<p>#3.代理方法中连接设备，设置接收数据的句柄<br>/**</p>
+<ul>
+<li>当连接到设备时调用<br>*</li>
+<li>@param picker  控制器</li>
+<li>@param peerID  设备ID</li>
+<li>@param session 会话  用于接收和发送数据<br>*/<ul>
+<li>(void)peerPickerController:(GKPeerPickerController <em>)picker didConnectPeer:(NSString </em>)peerID toSession:(GKSession *)session<br>{<br>// 保存会话<br>self.session = session;<br>// 设置句柄<br>[session setDataReceiveHandler:session withContext:nil];<br>// 销毁控制器<br>[picker dismiss];<br>}</li>
+</ul>
+</li>
+</ul>
+<p>#4.在官方文档中获取接收到的数据<br>/**</p>
+<ul>
+<li>接收到数据时调用<br>*/<ul>
+<li>(void) receiveData:(NSData <em>)data fromPeer:(NSString </em>)peer inSession: (GKSession <em>)session context:(void </em>)context<br>{<br>UIImage *image = [UIImage imageWithData:data];<br>self.imageView.image = image;<br>}</li>
+</ul>
+</li>
+</ul>
+<p>#5.发送数据<br>NSData *data = UIImageJPEGRepresentation(self.imageView.image, 0.5);<br>[self.session sendDataToAllPeers:data withDataMode:GKSendDataReliable error:nil];</p>
+<p>==================================================================================</p>
+<p>CoreBluetooth</p>
+<p>CoreBluetooth中，蓝牙的最小单位是特征，以下代码说白了就是为了获取特定的特征<br>// 1.中央管理者 (queue设置为nil，默认就是主队列)<br>_centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];<br>// 2.扫描周边设备  –&gt;发现设备 –&gt;连接设备<br>[self.centralManager scanForPeripheralsWithServices:nil options:nil];</p>
+<p>// 3.设置扫描服务<br>//扫描所有服务<br>[peripheral discoverServices:nil];</p>
+<p>// 4.在代理方法中获取扫描特征<br>/**</p>
+<ul>
+<li>当扫描到服务时调用<br>*/<ul>
+<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverServices:(NSError </em>)error<br>{<br>// 遍历所有服务<br>for (CBService *service in peripheral.services) {<br>  // 找到需要的服务<br>  if ([service.UUID.UUIDString isEqualToString:@”123”]) {<pre><code>// 4.扫描特征
+[peripheral discoverCharacteristics:nil forService:service];
+</code></pre>  }<br>}<br>}</li>
+</ul>
+</li>
+</ul>
+<p>// 5.在代理方法中获取特征，读取数据<br>/**</p>
+<ul>
+<li><p>当扫描到特征时调用<br>*/</p>
+<ul>
+<li><p>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverCharacteristicsForService:(CBService </em>)service error:(NSError <em>)error<br>{<br>// 遍历所有特征<br>for (CBCharacteristic </em>characteristic in service.characteristics) {<br>  //  找到需要的特征<br>  if ([characteristic.UUID.UUIDString isEqualToString:@”456”]) {</p>
+<pre><code>// 5.发送数据
+// 读取数据
+[peripheral readValueForCharacteristic:characteristic];
+
+// 写入数据
+[peripheral writeValue:[NSData data] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+</code></pre><p>  }<br>}<br>}</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>#6.读取到的数据在相应代理方法中拿到<br>/**</p>
+<ul>
+<li>当有数据更新时调用<br>*/<ul>
+<li>(void)peripheral:(CBPeripheral <em>)peripheral didUpdateValueForCharacteristic:(CBCharacteristic </em>)characteristic error:(NSError <em>)error<br>{<br>NSData </em>data = characteristic.value;<br>}</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/02/25/RunLoop原理和核心机制/" itemprop="url">
                   RunLoop原理及核心机制
                 </a>
@@ -1071,7 +1484,7 @@ self.locationM.delegate = self;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
