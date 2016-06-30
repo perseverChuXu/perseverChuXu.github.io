@@ -1473,6 +1473,168 @@ self.locationM.delegate = self;
 
 
     
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/05/04/SDWebImage的内部实现/" itemprop="url">
+                  SDWebImage的内部实现
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-05-04T20:51:17+08:00" content="2015-05-04">
+              2015-05-04
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#SDWebImage简介<br>SDWebImage是一个非常常用的开源第三方库,最简单的使用方式是以UIImageView类目的方式提供下载网络图片的方法.除此之外,还可以使用它作为图片异步下载器,图片自动缓存,支持gif动态图等,他会保证相同的URL图片资源只下载一次,永远不会锁住主线程,同时支持GCD和ARC,ARM64.使用SDWebImage下载网络图片可以提高性能.</p>
+<p>#在项目中的实际使用</p>
+<p>#1.第一步，下载SDWebImage，导入工程。github托管地址<a href="https://github.com/rs/SDWebImage" target="_blank" rel="external">https://github.com/rs/SDWebImage</a></p>
+<p>#2.第二步,在需要的地方导入头文件 #import “UIImageView+WebCache.h”</p>
+<p>#3.第三步,调用sd_setImageWithURL : 方法缓存图片, 2.0版本是使用setImageWithURL:<br>1&gt;图片缓存的基本代码<br>sd_setImageWithURL:<br>[self.image sd_setImageWithURL: imageUrl];<br>2&gt; sd_setImageWithURL:completed:<br>[self.image sd_setImageWithURL: imageUrl completed:^(UIImage <em>iamge,NSError </em>err,SDImageCacheType cacheType, NSURL <em>imageURL){<br>NSLog(@”这里可以在图片加载之后做一些事情”)<br>}];<br>3&gt;设置一张占位图片,当图片加载完成之后在替换<br>sd_setImageWithURL:placeholderImage:<br>[self.image sd_setImageWithURL:imagePath1 placeholderImage:[UIImage imageNamed:@”default”]];<br>4&gt;使用默认图片,而且用block在完成之后做一些事情<br>sd_setImageWithURL:  placeholderImage:  completed:<br>[self.image sd_setImageWithURL:imagePath placeholderImage:[UIImage imageNamed:@”default”] completed:^(UIImage </em>image, NSError <em>error, SDImageCacheType cacheType, NSURL </em>imageURL) {<br>        NSLog(@”图片加载完成后做的事情”);<br>    }];<br>5&gt;sd_setImageWithURL:  placeholderImage: options<br>失败后重试<br>[self.image sd_setImageWithURL:imagePath placeholderImage:[UIImage imageNamed:@”default”] options:SDWebImageRetryFailed];</p>
+<p>#可选项options的所有选项</p>
+<pre><code>// 失败后重试
+SDWebImageRetryFailed = 1 &lt;&lt; 0,
+
+//UI交互期间开始下载，导致延迟下载比如UIScrollView减速。
+SDWebImageLowPriority = 1 &lt;&lt; 1,
+
+//只进行内存缓存
+SDWebImageCacheMemoryOnly = 1 &lt;&lt; 2,
+
+//这个标志可以渐进式下载,显示的图像是逐步在下载
+SDWebImageProgressiveDownload = 1 &lt;&lt; 3,
+
+//刷新缓存
+SDWebImageRefreshCached = 1 &lt;&lt; 4,
+
+//后台下载
+SDWebImageContinueInBackground = 1 &lt;&lt; 5,
+
+//NSMutableURLRequest.HTTPShouldHandleCookies = YES;
+
+SDWebImageHandleCookies = 1 &lt;&lt; 6,
+
+//允许使用无效的SSL证书
+//SDWebImageAllowInvalidSSLCertificates = 1 &lt;&lt; 7,
+
+//优先下载
+SDWebImageHighPriority = 1 &lt;&lt; 8,
+
+//延迟占位符
+SDWebImageDelayPlaceholder = 1 &lt;&lt; 9,
+
+//改变动画形象
+SDWebImageTransformAnimatedImage = 1 &lt;&lt; 10,
+</code></pre><p>#二 SDWebImage的内部实现过程<br>1.入口 setImageWithURL:placeholderImage:options:<br>先把  placeholderImage 显示<br>然后   SDWebImageManager 根据 URL 开始处理图片。<br>2.进入SDWebImageManager- downLoadImageWithURL :delegate:options:userInfo:<br>交给SDImageCache从缓存中查找图片是否已经下载完毕(通过方法queryDiskCacheForKey:delegate:userInfo:)<br>3.首先从内存图片缓存中查找是否有图片，如果内存中已经有图片缓存，SDImageCacheDelegate 回调 imageCache:didFindImage:forKey:userInfo: 到 SDWebImageManager。<br>4.SDWebImageManagerDelegate 回调 webImageManager:didFinishWithImage: 到 UIImageView+WebCache 等前端展示图片。<br>5.内存缓存中没有,生成NSInvocationOperation 添加到队列开始从硬盘查找图片是否已经缓存.<br>6.根据UELKey在硬盘缓存目录下尝试读取图片文件,这一步实在NSOperation进行的操作,所以会主线程进行结果回调notifyDelegate;<br>7.如果上一操作从硬盘读取到了图片，将图片添加到内存缓存中（如果空闲内存过小，会先清空内存缓存）。SDImageCacheDelegate 回调 imageCache:didFindImage:forKey:userInfo:。进而回调展示图片。<br>8.如果从硬盘缓存目录读取不到图片,说明所有缓存中都不存在该图片,需要下载图片,回调imageCache:didNotFindImageForKey: userInfo;<br>9.共享或重新生成一个下载器 SDWebImageDownloader 开始下载图片。<br>10.图片下载由 NSURLConnection 来做，实现相关 delegate 来判断图片下载中、下载完成和下载失败。<br>11.connection:didReceiveData: 中利用 ImageIO 做了按图片下载进度加载效果。<br>12.connectionDidFinishLoading: 数据下载完成后交给 SDWebImageDecoder 做图片解码处理。<br>13.图片解码处理在一个 NSOperationQueue 完成，不会拖慢主线程 UI。如果有需要对下载的图片进行二次处理，最好也在这里完成，效率会好很多。<br>14.在主线程 notifyDelegateOnMainThreadWithInfo: 宣告解码完成，imageDecoder:didFinishDecodingImage:userInfo: 回调给 SDWebImageDownloader。<br>15.imageDownloader:didFinishWithImage: 回调给 SDWebImageManager 告知图片下载完成。<br>16.通知所有的 downloadDelegates 下载完成，回调给需要的地方展示图片。<br>17.将图片保存到 SDImageCache 中，内存缓存和硬盘缓存同时保存。写文件到硬盘也在以单独 NSInvocationOperation 完成，避免拖慢主线程。<br>18.SDImageCache在初始化的时候会注册一些消息通知,在内存警告或者推到后台的时候清理内存图片缓存,应用结束的时候清理过期图片.<br>19.SDWebImage 也提供了 UIButton+WebCache 和 MKAnnotationView+WebCache，方便使用。<br>20.SDWebImagePrefetcher 可以预先下载图片，方便后续使用。<br>SDWebImage库的作用：<br>通过对UIImageView的类别扩展来实现异步加载替换图片的工作。</p>
+<p>#主要用到的类和对象：<br>1、UIImageView (WebCache)类别，入口封装，实现读取图片完成后的回调<br>2、SDWebImageManager，对图片进行管理的中转站，记录那些图片正在读取。<br>向下层读取Cache（调用SDImageCache），或者向网络读取对象（调用SDWebImageDownloader） 。<br>实现SDImageCache和SDWebImageDownloader的回调。<br>3、SDImageCache，根据URL的MD5摘要对图片进行存储和读取（实现存在内存中或者存在硬盘上两种实现）<br>实现图片和内存清理工作。<br>4、SDWebImageDownloader，根据URL向网络读取数据（实现部分读取和全部读取后再通知回调两种方式）</p>
+<p>其他类：<br>SDWebImageDecoder，异步对图像进行了一次解压</p>
+<p>#特别注意</p>
+<p>#1、SDImageCache是怎么做数据管理的?<br>SDImageCache分两个部分，一个是内存层面的，一个是硬盘层面的。<br>内存层面的相当是个缓存器，以Key-Value的形式存储图片。当内存不够的时候会清除所有缓存图片。<br>用搜索文件系统的方式做管理，文件替换方式是以时间为单位，剔除时间大于一周的图片文件。<br>当SDWebImageManager向SDImageCache要资源时，先搜索内存层面的数据，如果有直接返回，没有的话去访问磁盘，将图片从磁盘读取出来，然后做Decoder，将图片对象放到内存层面做备份，再返回调用层。</p>
+<p>#2、为什么必须做Decoder?<br>通过这个博客：<a href="http://www.cocoanetics.com/2011/10/avoiding-image-decompression-sickness/" target="_blank" rel="external">http://www.cocoanetics.com/2011/10/avoiding-image-decompression-sickness/</a><br>了解到，由于UIImage的imageWithData函数是每次画图的时候才将Data解压成ARGB的图像<br>所以在每次画图的时候，会有一个解压操作，这样效率很低，但是只有瞬时的内存需求。<br>为了提高效率通过SDWebImageDecoder将包装在Data下的资源解压，然后画在另外一张图片上，这样这张新图片就不再需要重复解压了。<br>这种做法是典型的空间换时间的做法.</p>
+<p>#最后整理一波思路<br>1.入口 setImageWithURL:placeholderImage:options: 显示占位图<br>                      |<br>        2.SDWebImageManager根据url处理图片<br>                      |</p>
+<ol>
+<li>SDWebImageManager调用downloadWithURL方法-&gt;让SDImageCache从缓存查找图片是否已经下载                              <pre><code>         |
+先从内存缓存中查找                             
+       有|
+</code></pre></li>
+<li>SDImageCacheDelegate回调 didFindImage到SDWebImageManager<br>SDWebImageManagerDelegate回调didFinishWithImage到<br>UIImageView+WebCache 等前端展示图片<pre><code>没有|
+</code></pre>5.生成 NSInvocationOperation 添加到队列开始从硬盘查找图片是否已经缓存<pre><code>|
+</code></pre></li>
+<li>根据URLKey在硬盘缓存目录下尝试读取图片文件.NSOperation中完成<pre><code>读取到|
+</code></pre>7.将图片添加到内存缓存中,内存缓存过小,会先清空内存缓存SDImageCacheDelegate回调didFindImage到SDWebImageManager <pre><code>没有读取到|
+</code></pre>8.SDImageCacheDelegate回调imagedidNotFindImageForKey<pre><code>|
+</code></pre>9.共享或重新生成一个下载器SDWebImageDownloader开始下载图片<pre><code>|
+</code></pre>10.图片下载由 NSURLConnection负责 通过监听代理方法可以判断图片下载中和下载完成和下载失败.<pre><code>|
+</code></pre>11.可以在connection:didReceiveData:中实现按图片下载进度加载效果<pre><code>|
+</code></pre>12.connectionDidFinishLoading: 数据下载完成后交给 SDWebImageDecoder 做图片解码处理。<pre><code>|
+</code></pre>13.图片解码处理在一个NSOperationQueue中完成,不会拖慢主线程UI. #mark:如果有需要对下载图片进行二次处理可以在这里<pre><code>|
+</code></pre>14.在主线程 notifyDelegateOnMainThreadWithInfo: 宣告解码完成，imageDecoder:didFinishDecodingImage:userInfo: 回调给 SDWebImageDownloader。<pre><code>|
+</code></pre>15.imageDownIoader:didFinishWithImage:回调给SDWebImageManager告知图片下载完成<pre><code>|
+</code></pre>16.通知所有的 downloadDelegates 下载完成，回调给需要的地方展示图片。<pre><code>|
+</code></pre>17.将图片保存到 SDImageCache 中，内存缓存和硬盘缓存同时保存。写文件到硬盘也在以 NSInvocationOperation 完成，避免拖慢主线程<pre><code>|
+</code></pre>18.SDImageCache 在初始化的时候会注册一些消息通知，在内存警告或退到后台的时候清理内存图片缓存，应用结束的时候清理过期图片<pre><code>|
+</code></pre>19.SDImageCache 在初始化的时候会注册一些消息通知，在内存警告或退到后台的时候清理内存图片缓存，应用结束的时候清理过期图片</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
   </section>
 
   
@@ -1514,7 +1676,7 @@ self.locationM.delegate = self;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
