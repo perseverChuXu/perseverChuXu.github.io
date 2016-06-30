@@ -233,6 +233,162 @@
             
               
                 
+                <a class="post-title-link" href="/2016/02/25/RunLoop原理和核心机制/" itemprop="url">
+                  RunLoop原理及核心机制
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-25T22:23:14+08:00" content="2016-02-25">
+              2016-02-25
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#RunLoop的定义</p>
+<p>当有持续的异步任务需求时，我们需要创建一个独立的生命周期可控的线程。RunLoop就是控制线程生命周期并接收事件进行处理的机制。</p>
+<p>#RunLoop是iOS事件响应与任务处理最核心的机制，它贯穿iOS整个系统。</p>
+<p>Foundation: NSRunLoop<br>Core Foundation: CFRunLoop 核心部分，代码开源，C 语言编写，跨平台</p>
+<p>#1.目的</p>
+<p>通过RunLoop机制实现省电，流畅，响应速度快，用户体验好</p>
+<p>#2.理解</p>
+<p>进程相当于一家工厂，线程则是一个流水线，Run Loop属于流水线上的主管；<br>1&gt;当工厂接到商家的订单分配给这个流水线时，Run Loop就启动这个流水线，让流水线动起来，生产产品；<br>2&gt;当产品生产完毕时，Run Loop就会暂时停下流水线，节约资源。<br>RunLoop管理流水线，流水线才不会因为无所事事被工厂销毁；而不需要流水线时，就会辞退RunLoop这个主管，即退出线程，把所有资源释放。</p>
+<p>#RunLoop并不是iOS平台的专属概念，在任何平台的多线程编程中，为控制线程的生命周期，接收处理异步消息都需要类似RunLoop的循环机制实现，Android的Looper就是类似的机制。</p>
+<p>#3.特性</p>
+<p>1&gt; 主线程的RunLoop在应用启动的时候就会自动创建<br>2&gt; 其他线程则需要在该线程下自己启动<br>3&gt; 不能自己创建RunLoop<br>4&gt; RunLoop并不是线程安全的，所以需要避免在其他线程上调用当前线程的RunLoop<br>5&gt; RunLoop负责管理autoreleasepools<br>6&gt; RunLoop负责处理消息事件，即输入源事件和计时器事件</p>
+<p>#4.RunLoop机制</p>
+<p>主线程 (有 RunLoop 的线程) 几乎所有函数都从以下六个之一的函数调起:</p>
+<p>CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION<br>CFRunloop is calling out to an abserver callback function<br>用于向外部报告 RunLoop 当前状态的更改，框架中很多机制都由 RunLoopObserver 触发，如 CAAnimation</p>
+<p>CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK<br>CFRunloop is calling out to a block<br>消息通知、非延迟的perform、dispatch调用、block回调、KVO</p>
+<p>CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE<br>CFRunloop is servicing the main desipatch queue</p>
+<p>CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION<br>CFRunloop is calling out to a timer callback function<br>延迟的perform, 延迟dispatch调用</p>
+<p>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION<br>CFRunloop is calling out to a source 0 perform function<br>处理App内部事件、App自己负责管理（触发），如UIEvent、CFSocket。普通函数调用，系统调用</p>
+<p>CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE1_PERFORM_FUNCTION<br>CFRunloop is calling out to a source 1 perform function<br>由RunLoop和内核管理，Mach port驱动，如CFMachPort、CFMessagePort</p>
+<p>#5.RunLoop 架构</p>
+<p>#RunLoop 原理和核心机制</p>
+<p>RunLoop主要有以下六种状态：</p>
+<p>kCFRunLoopEntry – 进入runloop循环<br>kCFRunLoopBeforeTimers – 处理定时调用前回调<br>kCFRunLoopBeforeSources – 处理input sources的事件<br>kCFRunLoopBeforeWaiting – runloop睡眠前调用<br>kCFRunLoopAfterWaiting – runloop唤醒后调用<br>kCFRunLoopExit – 退出runloop<br>RunLoop 运行时调用栈</p>
+<p>#主线程App运行时<br>RunLoop 原理和核心机制</p>
+<p>RunLoopObserver与Autorelease Pool的关系<br>UIKit 通过 RunLoopObserver 在 RunLoop 两次 Sleep 间对 Autorelease Pool 进行 Pop 和 Push 将这次 Loop 中产生的 Autorelease 对象释放。</p>
+<p>#RunLoop的挂起与唤醒</p>
+<p>指定用于唤醒的 mach_port 端口<br>调用 mach_msg 监听唤醒端口，被唤醒前系统内核将这个线程挂起，停留在mach_msg_trap状态。<br>由另一个线程向内核发送这个端口的msg后，trap状态被唤醒，RunLoop继续工作。<br>RunLoop支持的消息事件(Events)</p>
+<p>支持接收处理输入源（Input Source）事件，包括：<br>系统的Mach Port事件，是一种通讯事件<br>自定义输入事件<br>支持接受处理定时源（Timer）事件</p>
+<p>在启动RunLoop之前，必须添加监听的输入源事件或者定时源事件，否则调用[runloop run]会直接返回，而不会进入循环让线程长驻。</p>
+<p>如果没有添加任何输入源事件或Timer事件，线程会一直在无限循环空转中，会一直占用CPU时间片，没有实现资源的合理分配。<br>没有while循环且没有添加任何输入源或Timer的线程，线程会直接完成，被系统回收。</p>
+<p>//错误做法<br>NSRunLoop *runLoop = [NSRunLoop currentRunLoop];<br>while (!self.isCancelled &amp;&amp; !self.isFinished) {<br>    [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];<br>};</p>
+<p>//正确做法<br>NSRunLoop *runLoop = [NSRunLoop currentRunLoop];<br>[runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];<br>while (!self.isCancelled &amp;&amp; !self.isFinished) {<br>    @autoreleasepool {<br>        [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];<br>    }<br>}<br>Run Loop Modes</p>
+<p>#理解<br>Run Loop Mode就是流水线上支持生产的产品类型，流水线在一个时刻只能在一种模式下运行，生产某一类型的产品。消息事件就是订单。</p>
+<p>Cocoa定义了四中Mode</p>
+<p>Default：NSDefaultRunLoopMode，默认模式，在Run Loop没有指定Mode的时候，默认就跑在Default Mode下<br>Connection：NSConnectionRunLoopMode，用来监听处理网络请求NSConnection的事件<br>Modal：NSModalPanelRunLoopMode，OSX的Modal面板事件<br>Event tracking：UITrackingRunLoopMode，拖动事件<br>Common mode：NSRunLoopCommonModes，是一个模式集合，当绑定一个事件源到这个模式集合的时候就相当于绑定到了集合内的每一个模式<br>RunLoop可以通过[acceptInputForMode:beforeDate:]和[runMode:beforeDate:]来指定在一段时间内的运行模式。如果不指定的话，RunLoop默认会运行在Default下（不断重复调用runMode:NSDefaultRunLoopMode beforDate:）</p>
+<p>#在主线程启动一个计时器,拖动UITableView或者UIScrollView，计时器不执行的原因和解决方案<br>在主线程启动一个计时器Timer，然后拖动UITableView或者UIScrollView，计时器不执行。这是因为，为了更好的用户体验，在主线程中Event tracking模式的优先级最高。在用户拖动控件时，主线程的Run Loop是运行在Event tracking Mode下，而创建的Timer是默认关联为Default Mode，因此系统不会立即执行Default Mode下接收的事件。解决方法：</p>
+<p>NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:1.0<br>                                                   target:self<br>                                                 selector:@selector(timerFireMethod:)<br>                                                 userInfo:nil<br>                                                  repeats:YES];</p>
+<p>[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];<br>//或<br>[[NSRunLoop currentRunLoop] addTimer:timer forMode:UITrackingRunLoopMode];</p>
+<p>[timer fire];</p>
+<p>#Run Loop应用实践</p>
+<p>Run Loop主要有以下三个应用场景：</p>
+<p>#1.维护线程的生命周期，让线程不自动退出，isFinished为Yes时退出。<br>NSRunLoop <em>runLoop = [NSRunLoop currentRunLoop];<br>[runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];<br>while (!self.isCancelled &amp;&amp; !self.isFinished) {<br>    @autoreleasepool {<br>            [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];<br>    }<br>}<br>创建常驻线程，执行一些会一直存在的任务。该线程的生命周期跟App相同<br>@autoreleasepool {<br>        NSRunLoop </em>runLoop = [NSRunLoop currentRunLoop];<br>        [runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];<br>        [runLoop run];<br>}</p>
+<p>#2.在一定时间内监听某种事件，或执行某种任务的线程<br>如下代码，在30分钟内，每隔30s执行onTimerFired:。这种场景一般会出现在，如我需要在应用启动之后，在一定时间内持续更新某项数据。<br>@autoreleasepool {<br>    NSRunLoop <em> runLoop = [NSRunLoop currentRunLoop];<br>    NSTimer </em> udpateTimer = [NSTimer timerWithTimeInterval:30<br>                                                    target:self<br>                                                  selector:@selector(onTimerFired:)<br>                                                  userInfo:nil<br>                                                   repeats:YES];<br>    [runLoop addTimer:udpateTimer forMode:NSRunLoopCommonModes];<br>    [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:60*30]];<br>}</p>
+<p>#3.AFNetworking中RunLoop的创建</p>
+<ul>
+<li><p>(void)networkRequestThreadEntryPoint:(id)__unused object {<br>  @autoreleasepool {</p>
+<pre><code>[[NSThread currentThread] setName:@&quot;AFNetworking&quot;];
+
+NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+ // 这里主要是监听某个 port，目的是让这个 Thread 不会回收
+[runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode]; 
+[runLoop run];
+</code></pre><p>  }<br>}</p>
+</li>
+<li><p>(NSThread <em>)networkRequestThread {<br>  static NSThread </em>_networkRequestThread = nil;<br>  static dispatch_once_t oncePredicate;<br>  dispatch_once(&amp;oncePredicate, ^{</p>
+<pre><code>_networkRequestThread =
+[[NSThread alloc] initWithTarget:self
+                        selector:@selector(networkRequestThreadEntryPoint:)
+                          object:nil];
+[_networkRequestThread start];
+</code></pre><p>  });<br>  return _networkRequestThread;<br>}</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2015/12/02/分享/" itemprop="url">
                   高效工具资源及分享
                 </a>
@@ -915,7 +1071,7 @@ self.locationM.delegate = self;
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
