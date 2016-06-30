@@ -84,52 +84,19 @@
 
 
 
-<meta name="description" content="CocoaPods的使用
-Podfile.lock文件
-最后一次更新Pods时, 所有第三方框架的版本号
-
-
-常用指令的区别
-pod install
-会根据Podfile.lock文件中列举的版本号来安装第三方框架
-如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架
-安装框架之前, 默认会执行pod repo update指令
-
-
-pod upd">
+<meta name="description" content="#socket简介及特性1.socket（套接字）是通信的基石，是支持TCP/IP协议的网络通信的基本操作单元，包含进行网络通信必须的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口。
+2.多个TCP连接或多个应用程序进程可能需要通过同一个TCP协议端口传输数据。为了区别不同的应用程序进程和连接，计算机操作系统为应用程序与TCP/IP协议交互">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CocoaPods的使用">
-<meta property="og:url" content="http://.com/2015/06/11/CocoaPods的使用/index.html">
+<meta property="og:title" content="Scoket以及TCP/IP的理解">
+<meta property="og:url" content="http://.com/2015/05/02/Scoket以及TCP:IP的理解/index.html">
 <meta property="og:site_name" content="君子性非异也 善假于物也">
-<meta property="og:description" content="CocoaPods的使用
-Podfile.lock文件
-最后一次更新Pods时, 所有第三方框架的版本号
-
-
-常用指令的区别
-pod install
-会根据Podfile.lock文件中列举的版本号来安装第三方框架
-如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架
-安装框架之前, 默认会执行pod repo update指令
-
-
-pod upd">
-<meta property="og:updated_time" content="2016-05-24T03:25:33.000Z">
+<meta property="og:description" content="#socket简介及特性1.socket（套接字）是通信的基石，是支持TCP/IP协议的网络通信的基本操作单元，包含进行网络通信必须的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口。
+2.多个TCP连接或多个应用程序进程可能需要通过同一个TCP协议端口传输数据。为了区别不同的应用程序进程和连接，计算机操作系统为应用程序与TCP/IP协议交互">
+<meta property="og:updated_time" content="2016-06-30T16:35:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CocoaPods的使用">
-<meta name="twitter:description" content="CocoaPods的使用
-Podfile.lock文件
-最后一次更新Pods时, 所有第三方框架的版本号
-
-
-常用指令的区别
-pod install
-会根据Podfile.lock文件中列举的版本号来安装第三方框架
-如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架
-安装框架之前, 默认会执行pod repo update指令
-
-
-pod upd">
+<meta name="twitter:title" content="Scoket以及TCP/IP的理解">
+<meta name="twitter:description" content="#socket简介及特性1.socket（套接字）是通信的基石，是支持TCP/IP协议的网络通信的基本操作单元，包含进行网络通信必须的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口。
+2.多个TCP连接或多个应用程序进程可能需要通过同一个TCP协议端口传输数据。为了区别不同的应用程序进程和连接，计算机操作系统为应用程序与TCP/IP协议交互">
 
 
 
@@ -147,7 +114,7 @@ pod upd">
   };
 </script>
 
-  <title> CocoaPods的使用 | 君子性非异也 善假于物也 </title>
+  <title> Scoket以及TCP/IP的理解 | 君子性非异也 善假于物也 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -297,7 +264,7 @@ pod upd">
             
             
               
-                CocoaPods的使用
+                Scoket以及TCP/IP的理解
               
             
           </h1>
@@ -309,8 +276,8 @@ pod upd">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-06-11T22:51:17+08:00" content="2015-06-11">
-              2015-06-11
+            <time itemprop="dateCreated" datetime="2015-05-02T09:51:17+08:00" content="2015-05-02">
+              2015-05-02
             </time>
           </span>
 
@@ -337,31 +304,18 @@ pod upd">
       
 
       
-        <h1 id="CocoaPods的使用"><a href="#CocoaPods的使用" class="headerlink" title="CocoaPods的使用"></a>CocoaPods的使用</h1><ul>
-<li>Podfile.lock文件<ul>
-<li>最后一次更新Pods时, 所有第三方框架的版本号</li>
-</ul>
-</li>
-<li>常用指令的区别<ul>
-<li>pod install<ul>
-<li>会根据Podfile.lock文件中列举的版本号来安装第三方框架</li>
-<li>如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架</li>
-<li>安装框架之前, 默认会执行pod repo update指令</li>
-</ul>
-</li>
-<li>pod update<ul>
-<li>将所有第三方框架更新到最新版本, 并且创建一个新的Podfile.lock文件</li>
-<li>安装框架之前, 默认会执行pod repo update指令</li>
-</ul>
-</li>
-<li>pod install –no-repo-update</li>
-<li>pod update –no-repo-update<ul>
-<li>安装框架之前, 不会执行pod repo update指令”</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+        <p>#socket简介及特性<br>1.socket（套接字）是通信的基石，是支持TCP/IP协议的网络通信的基本操作单元，包含进行网络通信必须的五种信息：连接使用的协议，本地主机的IP地址，本地进程的协议端口，远地主机的IP地址，远地进程的协议端口。</p>
+<p>2.多个TCP连接或多个应用程序进程可能需要通过同一个TCP协议端口传输数据。为了区别不同的应用程序进程和连接，计算机操作系统为应用程序与TCP/IP协议交互提供了套接字(Socket)接口。应用层可以和传输层通过Socket接口，区分来自不同应用程序进程或网络连接的通信，实现数据传输的并发服务。</p>
+<p>3.建立Socket连接至少需要一对套接字，其中一个运行于客户端，称为ClientSocket，另一个运行于服务器端，称为ServerSocket。套接字之间的连接过程分为三个步骤：服务器监听，客户端请求，连接确认。</p>
+<p>Socket可以支持不同的传输层协议（TCP或UDP），当使用TCP协议进行连接时，该Socket连接就是一个TCP连接,UDP连接同理。</p>
+<p>#socket使用的库函数<br>1.创建套接字</p>
+<p>Socket(af,type,protocol)//建立地址和套接字的联系<br>bind(sockid, local addr, addrlen)//服务器端侦听客户端的请求<br>listen( Sockid ,quenlen)//建立服务器/客户端的连接 (面向连接TCP）</p>
+<p>2.客户端请求连接</p>
+<p>Connect(sockid, destaddr, addrlen)//服务器端等待从编号为Sockid的Socket上接收客户连接请求<br>newsockid=accept(Sockid，Clientaddr, paddrlen)//发送/接收数据</p>
+<p>3.面向连接：</p>
+<p>send(sockid, buff, bufflen)<br>recv()</p>
+<p>4.面向无连接：</p>
+<p>sendto(sockid,buff,…,addrlen)<br>recvfrom()</p>
 
       
     </div>
@@ -386,16 +340,12 @@ pod upd">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/04/SDWebImage的内部实现/" rel="next" title="SDWebImage的内部实现">
-                <i class="fa fa-chevron-left"></i> SDWebImage的内部实现
-              </a>
-            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/20/项目管理Git的常用命令/" rel="prev" title="项目管理Git常用命令">
-                项目管理Git常用命令 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/05/04/SDWebImage的内部实现/" rel="prev" title="SDWebImage的内部实现">
+                SDWebImage的内部实现 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -496,7 +446,7 @@ pod upd">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CocoaPods的使用"><span class="nav-number">1.</span> <span class="nav-text">CocoaPods的使用</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>

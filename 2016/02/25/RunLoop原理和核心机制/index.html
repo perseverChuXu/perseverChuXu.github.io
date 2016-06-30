@@ -100,7 +100,7 @@ Foundation: NSRunLoopCore Foundation: CFRunLoop 核心部分，代码开源，C 
 Foundation: NSRunLoopCore Foundation: CFRunLoop 核心部分，代码开源，C 语言编写，跨平台
 #1.目的
 通过RunLoo">
-<meta property="og:updated_time" content="2016-06-30T02:56:57.000Z">
+<meta property="og:updated_time" content="2016-06-30T17:09:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RunLoop原理及核心机制">
 <meta name="twitter:description" content="#RunLoop的定义
@@ -349,8 +349,9 @@ Foundation: NSRunLoopCore Foundation: CFRunLoop 核心部分，代码开源，C 
 <p>//错误做法<br>NSRunLoop *runLoop = [NSRunLoop currentRunLoop];<br>while (!self.isCancelled &amp;&amp; !self.isFinished) {<br>    [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];<br>};</p>
 <p>//正确做法<br>NSRunLoop *runLoop = [NSRunLoop currentRunLoop];<br>[runLoop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];<br>while (!self.isCancelled &amp;&amp; !self.isFinished) {<br>    @autoreleasepool {<br>        [runLoop runUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];<br>    }<br>}<br>Run Loop Modes</p>
 <p>#理解<br>Run Loop Mode就是流水线上支持生产的产品类型，流水线在一个时刻只能在一种模式下运行，生产某一类型的产品。消息事件就是订单。</p>
-<p>Cocoa定义了四中Mode</p>
-<p>Default：NSDefaultRunLoopMode，默认模式，在Run Loop没有指定Mode的时候，默认就跑在Default Mode下<br>Connection：NSConnectionRunLoopMode，用来监听处理网络请求NSConnection的事件<br>Modal：NSModalPanelRunLoopMode，OSX的Modal面板事件<br>Event tracking：UITrackingRunLoopMode，拖动事件<br>Common mode：NSRunLoopCommonModes，是一个模式集合，当绑定一个事件源到这个模式集合的时候就相当于绑定到了集合内的每一个模式<br>RunLoop可以通过[acceptInputForMode:beforeDate:]和[runMode:beforeDate:]来指定在一段时间内的运行模式。如果不指定的话，RunLoop默认会运行在Default下（不断重复调用runMode:NSDefaultRunLoopMode beforDate:）</p>
+<p>Cocoa定义了如下五种Mode</p>
+<p>Default：NSDefaultRunLoopMode，默认模式，在Run Loop没有指定Mode的时候，默认就跑在Default Mode下<br>Connection：NSConnectionRunLoopMode，用来监听处理网络请求NSConnection的事件<br>Modal：NSModalPanelRunLoopMode，OSX的Modal面板事件<br>Event tracking：UITrackingRunLoopMode，拖动事件<br>Common mode：NSRunLoopCommonModes，是一个模式集合，当绑定一个事件源到这个模式集合的时候就相当于绑定到了集合内的每一个模式</p>
+<p>RunLoop可以通过[acceptInputForMode:beforeDate:]和[runMode:beforeDate:]来指定在一段时间内的运行模式。如果不指定的话，RunLoop默认会运行在Default下（不断重复调用runMode:NSDefaultRunLoopMode beforDate:）</p>
 <p>#在主线程启动一个计时器,拖动UITableView或者UIScrollView，计时器不执行的原因和解决方案<br>在主线程启动一个计时器Timer，然后拖动UITableView或者UIScrollView，计时器不执行。这是因为，为了更好的用户体验，在主线程中Event tracking模式的优先级最高。在用户拖动控件时，主线程的Run Loop是运行在Event tracking Mode下，而创建的Timer是默认关联为Default Mode，因此系统不会立即执行Default Mode下接收的事件。解决方法：</p>
 <p>NSTimer * timer = [NSTimer scheduledTimerWithTimeInterval:1.0<br>                                                   target:self<br>                                                 selector:@selector(timerFireMethod:)<br>                                                 userInfo:nil<br>                                                  repeats:YES];</p>
 <p>[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];<br>//或<br>[[NSRunLoop currentRunLoop] addTimer:timer forMode:UITrackingRunLoopMode];</p>
@@ -481,7 +482,7 @@ NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">10</span>
+              <span class="site-state-item-count">11</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
