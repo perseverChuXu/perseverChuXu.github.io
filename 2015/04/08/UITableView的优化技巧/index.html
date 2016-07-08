@@ -1,0 +1,639 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="#UItableViewCell的重用机制
+#1.UItableView最核心的思想就是UItableViewCell的重用机制-&amp;gt; 简单的理解就是UItableView只会创建一个屏幕的UItableViewCell,其他的都是从缓存池中根据重用标识符抽取出来的.-&amp;gt;每当Cell画出屏幕时,就会被放到一个集合也就是缓存池(重用池)中当要显示某一位置的Cell时,会先去从缓存池中去,如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UItableView优化常用方法">
+<meta property="og:url" content="http://.com/2015/04/08/UITableView的优化技巧/index.html">
+<meta property="og:site_name" content="君子性非异也 善假于物也">
+<meta property="og:description" content="#UItableViewCell的重用机制
+#1.UItableView最核心的思想就是UItableViewCell的重用机制-&amp;gt; 简单的理解就是UItableView只会创建一个屏幕的UItableViewCell,其他的都是从缓存池中根据重用标识符抽取出来的.-&amp;gt;每当Cell画出屏幕时,就会被放到一个集合也就是缓存池(重用池)中当要显示某一位置的Cell时,会先去从缓存池中去,如">
+<meta property="og:updated_time" content="2016-07-04T20:56:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UItableView优化常用方法">
+<meta name="twitter:description" content="#UItableViewCell的重用机制
+#1.UItableView最核心的思想就是UItableViewCell的重用机制-&amp;gt; 简单的理解就是UItableView只会创建一个屏幕的UItableViewCell,其他的都是从缓存池中根据重用标识符抽取出来的.-&amp;gt;每当Cell画出屏幕时,就会被放到一个集合也就是缓存池(重用池)中当要显示某一位置的Cell时,会先去从缓存池中去,如">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> UItableView优化常用方法 | 君子性非异也 善假于物也 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">君子性非异也 善假于物也</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="#" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input" />
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'WEps6UsQK5do8sDRpD_N','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                UItableView优化常用方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2015-04-08T10:51:17+08:00" content="2015-04-08">
+              2015-04-08
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#UItableViewCell的重用机制</p>
+<p>#1.UItableView最核心的思想就是UItableViewCell的重用机制<br>-&gt; 简单的理解就是UItableView只会创建一个屏幕的UItableViewCell,其他的都是从缓存池中根据重用标识符抽取出来的.<br>-&gt;每当Cell画出屏幕时,就会被放到一个集合也就是缓存池(重用池)中当要显示某一位置的Cell时,会先去从缓存池中去,如果有,有直接拿来显示,如果没有,才会创建,这样做可以极大地减少了内存的开销.</p>
+<p>#2.UITableView的回调方法<br>-&gt;UItableView最主要的两个回调方法是tableView:cellForRowAtIndexPath:<br>-&gt;tableView:heightForRowAtIndexPath:</p>
+<p>#那么这两个方法调用的顺序是什么呢?<br>UItableView是继承自UIScrollView,所以需要先确定他的contentSize以及每个Cell的位置,然后才会把冲用的Cell放置到对应的位置.所以UItableView的回调顺序是先多次调用tableView:heightForRowAtIndexPath:  用来确定contentSize以及每个Cell的位置,然后才会调用tableView:cellForRowAtIndexPath: 从而来显示在当前屏幕的Cell.</p>
+<p>#3.那么优化具体是优化什么?<br>eg:如果现在要显示100个Cell，当前屏幕显示5个。<br>那么刷新（reload）UITableView时，<br>-&gt;UITableView会先调用100次tableView:heightForRowAtIndexPath:方法，<br>-&gt;然后调用5次tableView:cellForRowAtIndexPath:方法；<br>-&gt;滚动屏幕时，每当Cell滚入屏幕，都会调用<br>一次tableView:heightForRowAtIndexPath:<br>一次tableView:cellForRowAtIndexPath:方法。</p>
+<p>#所以UItabelView得优化主要就是优化上面两个回调方法</p>
+<p>#4.实际应用中优化的方法.</p>
+<p>#项目未优化前:</p>
+<ul>
+<li>(UITableViewCell <em>)tableView:(UITableView </em>)tableView cellForRowAtIndexPath:(NSIndexPath <em>)indexPath {<br>  ContacterTableCell </em>cell = [tableView   dequeueReusableCellWithIdentifier:@”ContacterTableCell”];<br>  if (!cell) {<pre><code>cell = (ContacterTableCell *)[[[NSBundle mainBundle] loadNibNamed:@&quot;ContacterTableCell&quot; owner:self options:nil] lastObject];
+</code></pre>  }<br>  NSDictionary *dict = self.dataList[indexPath.row];<br>  [cell setContentInfo:dict];<br>  return cell;<br>}</li>
+<li>(CGFloat)tableView:(UITableView <em>)tableView heightForRowAtIndexPath:(NSIndexPath </em>)indexPath {<br>  UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];<br>  return cell.frame.size.height;<br>}<br>#我们分析一下上面代码在实际应用时,由于在heightForRowAtIndexPath:方法中调用了cellForRowAtIndexPath:indexPath:这个方法<br>当Cell赋值内容,会根据内容设置布局，当然也就可以知道Cell的高度,如果是电商类的项目,1K行Cell就算调用1K次cellForRowAtIndexPath: 这种方案自然是Pass的.</li>
+</ul>
+<p>#改进方法1.</p>
+<ul>
+<li>(CGFloat)tableView:(UITableView <em>)tableView heightForRowAtIndexPath:(NSIndexPath </em>)indexPath {<br>  NSDictionary *dict = self.dataList[indexPath.row];<br>  return [ContacterTableCell cellHeightOfInfo:dict];<br>}<br>#思路: 赋值和计算布局分离  各司其职,互不干扰. 不互相调用.</li>
+</ul>
+<p>#改进1+:直接先根据数据源计算出对应的布局，并缓存到数据源中</p>
+<ul>
+<li>(CGFloat)tableView:(UITableView <em>)tableView heightForRowAtIndexPath:(NSIndexPath </em>)indexPath {<br>  NSDictionary *dict = self.dataList[indexPath.row];<br>  return [ContacterTableCell cellHeightOfInfo:dict];<br>}<br>这样在heightForRowAtIndexPath:方法中就直接返回高度不需要每次计算</li>
+</ul>
+<p>#改进方法2:自定义Cell的绘制.<br>我们在Cell上添加系统控件的时候,实质上系统都需要调用底层接口进行绘制,当我们添加大量控件时,对资源的开销也会很大,所以我们可以索性,提高效率.</p>
+<p>#代码如下:<br>首先需要给自定义的Cell添加draw方法,(或者重写drawRect)</p>
+<p>1.//异步绘制<br>dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{<br>        CGRect rect = [_data[@”frame”] CGRectValue];<br>        UIGraphicsBeginImageContextWithOptions(rect.size, YES, 0);<br>        CGContextRef context = UIGraphicsGetCurrentContext();</p>
+<p>2.//整个内容的背景<br>        [[UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:1] set];<br>        CGContextFillRect(context, rect);</p>
+<p>3.//转发内容的背景<br>        if ([_data valueForKey:@”subData”]) {<br>            [[UIColor colorWithRed:243/255.0 green:243/255.0 blue:243/255.0 alpha:1] set];<br>            CGRect subFrame = [_data[@”subData”][@”frame”] CGRectValue];<br>            CGContextFillRect(context, subFrame);<br>            [[UIColor colorWithRed:200/255.0 green:200/255.0 blue:200/255.0 alpha:1] set];<br>            CGContextFillRect(context, CGRectMake(0, subFrame.origin.y, rect.size.width, .5));<br>        }<br>          {</p>
+<p>4.//名字<br>            float leftX = SIZE_GAP_LEFT+SIZE_AVATAR+SIZE_GAP_BIG;<br>            float x = leftX;<br>            float y = (SIZE_AVATAR-(SIZE_FONT_NAME+SIZE_FONT_SUBTITLE+6))/2-2+SIZE_GAP_TOP+SIZE_GAP_SMALL-5;<br>            [_data[@”name”] drawInContext:context withPosition:CGPointMake(x, y) andFont:FontWithSize(SIZE_FONT_NAME)<br>                             andTextColor:[UIColor colorWithRed:106/255.0 green:140/255.0 blue:181/255.0 alpha:1]<br>                                andHeight:rect.size.height];</p>
+<ol>
+<li>//时间+设备<pre><code>y += SIZE_FONT_NAME+5;
+float fromX = leftX;
+float size = [UIScreen screenWidth]-leftX;
+NSString *from = [NSString stringWithFormat:@&quot;%@  %@&quot;, _data[@&quot;time&quot;], _data[@&quot;from&quot;]];
+[from drawInContext:context withPosition:CGPointMake(fromX, y) andFont:FontWithSize(SIZE_FONT_SUBTITLE)
+       andTextColor:[UIColor colorWithRed:178/255.0 green:178/255.0 blue:178/255.0 alpha:1]
+          andHeight:rect.size.height andWidth:size];
+</code></pre>  }</li>
+</ol>
+<p>6.//将绘制的内容以图片的形式返回，并调主线程显示<br>UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();<br>        UIGraphicsEndImageContext();<br>        dispatch_async(dispatch_get_main_queue(), ^{<br>            if (flag==drawColorFlag) {<br>                postBGView.frame = rect;<br>                postBGView.image = nil;<br>                postBGView.image = temp;<br>            }<br>}<br>//内容如果是图文混排，就添加View，用CoreText绘制<br>[self drawText];<br>}}</p>
+<p>#如果重写drawRect就不需要用GCD异步线程,drawRect本身就是异步绘制.</p>
+<p>#3.滑动UItableView时,按需加载对应的内容.<br>代码如下:<br>//按需加载 - 如果目标行与当前行相差超过指定行数，只在目标滚动范围的前后指定3行加载。</p>
+<ul>
+<li>(void)scrollViewWillEndDragging:(UIScrollView <em>)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint </em>)targetContentOffset{<br>  NSIndexPath <em>ip = [self indexPathForRowAtPoint:CGPointMake(0, targetContentOffset-&gt;y)];<br>  NSIndexPath </em>cip = [[self indexPathsForVisibleRows] firstObject];<br>  NSInteger skipCount = 8;<br>  if (labs(cip.row-ip.row)&gt;skipCount) {<pre><code>NSArray *temp = [self indexPathsForRowsInRect:CGRectMake(0, targetContentOffset-&gt;y, self.width, self.height)];
+NSMutableArray *arr = [NSMutableArray arrayWithArray:temp];
+if (velocity.y&lt;0) {
+    NSIndexPath *indexPath = [temp lastObject];
+    if (indexPath.row+33) {
+        [arr addObject:[NSIndexPath indexPathForRow:indexPath.row-3 inSection:0]];
+        [arr addObject:[NSIndexPath indexPathForRow:indexPath.row-2 inSection:0]];
+        [arr addObject:[NSIndexPath indexPathForRow:indexPath.row-1 inSection:0]];
+    }
+}
+[needLoadArr addObjectsFromArray:arr];
+</code></pre>  }<br>}<br>#在tableView:cellForRowAtIndexPath:方法中加入判断：</li>
+</ul>
+<p>if (needLoadArr.count&gt;0&amp;&amp;[needLoadArr indexOfObject:indexPath]==NSNotFound) {<br>    [cell clear];<br>    return;<br>}</p>
+<p>#滚动很快时，只加载目标范围内的Cell，这样按需加载，极大的提高流畅度。</p>
+<p>##总结:UITableView的优化主要从三个方面入手:</p>
+<p>#1:提前计算并缓存好高度(布局),因为heightForRowAtIndexPath:是调用最频繁的方法;</p>
+<p>#2:异步绘制,遇到复杂界面,遇到性能瓶颈时,可以从这一方面入手.</p>
+<p>#3.滑动时按需加载-&gt;对于需要大量图片展示,网络加载的时候很管用!(SDWebImage已经实现异步加载，配合这条性能杠杠的).<br>除了上面这几点,还有一些常用被大家熟知的优化点:</p>
+<p>#4.正确使用reuseIdentifier来重用</p>
+<p>#5.尽量使所有的View 不透明,包括Cell自身,少用或者不用透明图层</p>
+<p>#6.如果Cell内的内容来自Web,使用异步加载,缓存请求结果</p>
+<p>#7.减少subViews的数量</p>
+<p>#8.尽量少用addView给Cell添加View,可以在初始化的时候添加,通过hide属性控制是否显示</p>
+<p>#结尾 为什么都是手动用代码创建Cell的？现在主流不都是Xib、Storyboard什么的嘛？<br>原因是：要想提高效率，还是手动写有用！抛开Xib、Storyboard需要系统自动转码，给系统多加了一层负担不谈，自定义Cell的绘制更是无从下手，所以，复杂的需要高效的界面，还是手动写代码吧！！！</p>
+<p>最后如果项目都是用的Xib、Storyboard，并需要优化UITableView的话，sunnyxx大神提出了好的方案：<br><a href="http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/" target="_blank" rel="external">http://blog.sunnyxx.com/2015/05/17/cell-height-calculation/</a> 大伙可以自行研究研究。</p>
+<p>注明：本篇的分析源码来源于开源项目VVeboTableViewDemo</p>
+<p>参考：<a href="https://github.com/johnil/VVeboTableViewDemo" target="_blank" rel="external">https://github.com/johnil/VVeboTableViewDemo</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/11/UITableView的重用机制详解/" rel="next" title="UITableView的重用机制详解">
+                <i class="fa fa-chevron-left"></i> UITableView的重用机制详解
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/05/02/Scoket以及TCP:IP的理解/" rel="prev" title="Scoket以及TCP/IP的理解">
+                Scoket以及TCP/IP的理解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/author.jpg"
+               alt="Xu Chu" />
+          <p class="site-author-name" itemprop="name">Xu Chu</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xu Chu</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

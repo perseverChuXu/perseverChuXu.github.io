@@ -84,52 +84,25 @@
 
 
 
-<meta name="description" content="CocoaPods的使用
-Podfile.lock文件
-最后一次更新Pods时, 所有第三方框架的版本号
-
-
-常用指令的区别
-pod install
-会根据Podfile.lock文件中列举的版本号来安装第三方框架
-如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架
-安装框架之前, 默认会执行pod repo update指令
-
-
-pod upd">
+<meta name="description" content="#写这篇文章的原因是为了加深对UITableView的重用机制的理解
+#首先,我们要明白我们为什么需要使用这种机制,其次,这种机制的原理是什么.举例说明:
+一个UITableView中有许多需要显示的cell,但是我们不可能每个都会浏览到,那么如果我们把这些数据全部都加载进去,是不是造成了内存的负担呢.
+我们所能显示的区域通常只有一个屏幕的大小,那么那些屏幕之外的信息是不需要一次性全都加载完的,只">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CocoaPods的使用">
-<meta property="og:url" content="http://.com/2015/06/11/CocoaPods的使用/index.html">
+<meta property="og:title" content="UITableView的重用机制详解">
+<meta property="og:url" content="http://.com/2015/03/11/UITableView的重用机制详解/index.html">
 <meta property="og:site_name" content="君子性非异也 善假于物也">
-<meta property="og:description" content="CocoaPods的使用
-Podfile.lock文件
-最后一次更新Pods时, 所有第三方框架的版本号
-
-
-常用指令的区别
-pod install
-会根据Podfile.lock文件中列举的版本号来安装第三方框架
-如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架
-安装框架之前, 默认会执行pod repo update指令
-
-
-pod upd">
-<meta property="og:updated_time" content="2016-05-24T03:25:33.000Z">
+<meta property="og:description" content="#写这篇文章的原因是为了加深对UITableView的重用机制的理解
+#首先,我们要明白我们为什么需要使用这种机制,其次,这种机制的原理是什么.举例说明:
+一个UITableView中有许多需要显示的cell,但是我们不可能每个都会浏览到,那么如果我们把这些数据全部都加载进去,是不是造成了内存的负担呢.
+我们所能显示的区域通常只有一个屏幕的大小,那么那些屏幕之外的信息是不需要一次性全都加载完的,只">
+<meta property="og:updated_time" content="2016-07-07T17:10:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CocoaPods的使用">
-<meta name="twitter:description" content="CocoaPods的使用
-Podfile.lock文件
-最后一次更新Pods时, 所有第三方框架的版本号
-
-
-常用指令的区别
-pod install
-会根据Podfile.lock文件中列举的版本号来安装第三方框架
-如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架
-安装框架之前, 默认会执行pod repo update指令
-
-
-pod upd">
+<meta name="twitter:title" content="UITableView的重用机制详解">
+<meta name="twitter:description" content="#写这篇文章的原因是为了加深对UITableView的重用机制的理解
+#首先,我们要明白我们为什么需要使用这种机制,其次,这种机制的原理是什么.举例说明:
+一个UITableView中有许多需要显示的cell,但是我们不可能每个都会浏览到,那么如果我们把这些数据全部都加载进去,是不是造成了内存的负担呢.
+我们所能显示的区域通常只有一个屏幕的大小,那么那些屏幕之外的信息是不需要一次性全都加载完的,只">
 
 
 
@@ -147,7 +120,7 @@ pod upd">
   };
 </script>
 
-  <title> CocoaPods的使用 | 君子性非异也 善假于物也 </title>
+  <title> UITableView的重用机制详解 | 君子性非异也 善假于物也 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -297,7 +270,7 @@ pod upd">
             
             
               
-                CocoaPods的使用
+                UITableView的重用机制详解
               
             
           </h1>
@@ -309,8 +282,8 @@ pod upd">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-06-11T22:51:17+08:00" content="2015-06-11">
-              2015-06-11
+            <time itemprop="dateCreated" datetime="2015-03-11T13:31:17+08:00" content="2015-03-11">
+              2015-03-11
             </time>
           </span>
 
@@ -337,31 +310,34 @@ pod upd">
       
 
       
-        <h1 id="CocoaPods的使用"><a href="#CocoaPods的使用" class="headerlink" title="CocoaPods的使用"></a>CocoaPods的使用</h1><ul>
-<li>Podfile.lock文件<ul>
-<li>最后一次更新Pods时, 所有第三方框架的版本号</li>
-</ul>
+        <p>#写这篇文章的原因是为了加深对UITableView的重用机制的理解</p>
+<p>#首先,我们要明白我们为什么需要使用这种机制,其次,这种机制的原理是什么.<br>举例说明:</p>
+<p>一个UITableView中有许多需要显示的cell,但是我们不可能每个都会浏览到,那么如果我们把这些数据全部都加载进去,是不是造成了内存的负担呢.</p>
+<p>我们所能显示的区域通常只有一个屏幕的大小,那么那些屏幕之外的信息是不需要一次性全都加载完的,只有当我们滑动屏幕需要浏览的时候,我们才需要它加载进来.因此,就有了要介绍的这部分内容,UITabelViewCell的重用机制.</p>
+<p>重用机制实现了数据和显示的分离,并不为每个数据创建一个UITableViewCell,我们只创建屏幕可显示的最大的cell个数+1,然后去循环重复使用这些cell,既节省空间,又达到我们需要显示的效果.</p>
+<p>#1.通过利用运行时 输出UITableView所有的成员变量,会找到NSMutableArray<em> visibleCells 和NSMutableDictionary</em> resuableTableCells两个属性.<br>visibleCells保存当前显示的Cells.<br>reusableTableCells保存可重用的Cells.</p>
+<p>TableView显示之初,resuableTableCells为空,<br>所以tableView dequeueReusableCellWithIdentifier:CellIdentifier返回nil。<br>开始的cell 都是通过<br>[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellI dentifier] 来创建,<br>且cellForRowAtIndexPath只是调用最大显示cell数的次数。</p>
+<p>#eg:有100条数据,iPhone一个屏幕最多显示5个Cell.程序最开始显示TableView的情况是:</p>
+<ol>
+<li><p>用[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier]创建10次cell，并给cell指定同样的重用标识(可以为不同显示类型的cell指定不同的标识)。并且10个cell全部都加入到visiableCells数组，reusableTableCells为空。</p>
 </li>
-<li>常用指令的区别<ul>
-<li>pod install<ul>
-<li>会根据Podfile.lock文件中列举的版本号来安装第三方框架</li>
-<li>如果一开始Podfile.lock文件不存在, 就会按照Podfile文件列举的版本号来安装第三方框架</li>
-<li>安装框架之前, 默认会执行pod repo update指令</li>
-</ul>
+<li><p>向下拖动tableView，当cell1完全移出屏幕，并且cell6(它也是alloc出来的，原因同上)完全显示出来的时候。cell6加入到visiableCells，cell1移出visiableCells，cell6加入到reusableTableCells。</p>
 </li>
-<li>pod update<ul>
-<li>将所有第三方框架更新到最新版本, 并且创建一个新的Podfile.lock文件</li>
-<li>安装框架之前, 默认会执行pod repo update指令</li>
-</ul>
+<li><p>接着向下拖动tableView，因为reusableTableCells中已经有值，所以，当需要显示新的cell，cellForRowAtIndexPath再次被调用的时候，tableView dequeueReusableCellWithIdentifier:CellIdentifier，返回cell1。cell1加入到visiableCells，cell1移出reusableTableCells；cell2移出visiableCells，cell2加入到reusableTableCells。之后再需要显示的Cell就可以正常重用了。</p>
 </li>
-<li>pod install –no-repo-update</li>
-<li>pod update –no-repo-update<ul>
-<li>安装框架之前, 不会执行pod repo update指令”</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+</ol>
+<p>所以整个过程并不难理解，但需要注意正是因为这样的原因：配置Cell的时候一定要注意，对取出的重用的cell做重新赋值，不要遗留老数据。</p>
+<p>#一些情况：</p>
+<p>　　使用过程中，并不是只有拖动超出屏幕的时候才会更新reusableTableCells表，还有：</p>
+<p>　　1. reloadData，这种情况比较特殊。一般是部分数据发生变化，需要重新刷新cell显示的内容时调用。在cellForRowAtIndexPath调用中，所有cell都是重用的。reloadData调用后，把visiableCells中所有cell移入reusableTableCells，visiableCells清空。cellForRowAtIndexPath调用后，再把reuse的cell从reusableTableCells取出来，放入到visiableCells。</p>
+<p>　　2. reloadRowsAtIndex，刷新指定的IndexPath。如果调用时reusableTableCells为空，那么cellForRowAtIndexPath调用后，是新创建cell，新的cell加入到visiableCells。老的cell移出visiableCells，加入到reusableTableCells。于是，之后的刷新就有cell做reuse了。</p>
+<p>#注意：</p>
+<p>1-重取出来的cell是有可能已经捆绑过数据或者加过子视图的，所以，如果有必要，要清除数据（比如textlabel的text）和remove掉add过的<br>子视图（使用tag）。<br>2-这样设计的目的是为了避免频繁的 alloc和delloc cell对象而已,没有多复杂。<br>3-设计的关键是实现cell和数据的完全分离<br>重点：避免重用机制出错</p>
+<p>1.重用机制调用的就是dequeueReusableCellWithIdentifier这个方法，方法的意思就是“出列可重用的cell”，因而只要将它换为cellForRowAtIndexPath（只从要更新的cell的那一行取出cell），就可以不使用重用机制，因而问题就可以得到解决，但会浪费一些空间</p>
+<p>2.为每个cell指定不同的重用标识符(reuseIdentifier)来解决。重用机制是根据相同的标识符来重用cell的，标识符不同的cell不能彼此重用。</p>
+<p>[cpp] view plain copy print?<br>NSString *identifier = [NSString stringWithFormat:@”TimeLineCell%d%d”,indexPath.section,indexPath.row];  </p>
+<p>3.删除重用的cell的所有子视图，从而得到一个没有特殊格式的cell，供其他cell重用。</p>
+<p>[cpp] view plain copy print?<br>if (cell == nil) {<br>        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];<br>    }<br>    else<br>    {<br>        //删除cell的所有子视图<br>        while ([cell.contentView.subviews lastObject] != nil)<br>        {<br>            [(UIView*)[cell.contentView.subviews lastObject] removeFromSuperview];<br>        }<br>    }   </p>
 
       
     </div>
@@ -386,16 +362,12 @@ pod upd">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/05/04/SDWebImage的内部实现/" rel="next" title="SDWebImage的内部实现">
-                <i class="fa fa-chevron-left"></i> SDWebImage的内部实现
-              </a>
-            
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/06/20/项目管理Git的常用命令/" rel="prev" title="项目管理Git常用命令">
-                项目管理Git常用命令 <i class="fa fa-chevron-right"></i>
+              <a href="/2015/04/08/UITableView的优化技巧/" rel="prev" title="UItableView优化常用方法">
+                UItableView优化常用方法 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -496,7 +468,7 @@ pod upd">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CocoaPods的使用"><span class="nav-number">1.</span> <span class="nav-text">CocoaPods的使用</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>
