@@ -84,22 +84,22 @@
 
 
 
-<meta name="description" content="#CoreBlueTooth简介可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上iPad设备必须是iPad mini及以上iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试
-#应用场景     运动手环     智能家居     拉卡拉蓝牙刷卡器
-#核心概念CBCentra">
+<meta name="description" content="#褚旭
+##男|应届毕业生|1993年5月大二接触iOS,大三的时候曾在北京黑马程序员培训现居住于北京| 户口黑龙江-鹤岗身份证:230403199305150216学历:本科|专业:计算机科学与技术手机：13945769567E-mail：6698087@163.com博客地址:[http://tiantianchuxu.com]
+##工作性质：    全职(实习)期望职业：    iOS软件开">
 <meta property="og:type" content="article">
-<meta property="og:title" content="蓝牙交互-CoreBlueTooth">
-<meta property="og:url" content="http://.com/2016/06/30/CoreBlueTooth/index.html">
+<meta property="og:title" content="iOS简历:褚旭">
+<meta property="og:url" content="http://.com/2016/07/12/褚旭简历iOS/index.html">
 <meta property="og:site_name" content="君子性非异也 善假于物也">
-<meta property="og:description" content="#CoreBlueTooth简介可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上iPad设备必须是iPad mini及以上iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试
-#应用场景     运动手环     智能家居     拉卡拉蓝牙刷卡器
-#核心概念CBCentra">
-<meta property="og:updated_time" content="2016-06-30T03:29:47.000Z">
+<meta property="og:description" content="#褚旭
+##男|应届毕业生|1993年5月大二接触iOS,大三的时候曾在北京黑马程序员培训现居住于北京| 户口黑龙江-鹤岗身份证:230403199305150216学历:本科|专业:计算机科学与技术手机：13945769567E-mail：6698087@163.com博客地址:[http://tiantianchuxu.com]
+##工作性质：    全职(实习)期望职业：    iOS软件开">
+<meta property="og:updated_time" content="2016-07-12T05:07:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="蓝牙交互-CoreBlueTooth">
-<meta name="twitter:description" content="#CoreBlueTooth简介可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上iPad设备必须是iPad mini及以上iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试
-#应用场景     运动手环     智能家居     拉卡拉蓝牙刷卡器
-#核心概念CBCentra">
+<meta name="twitter:title" content="iOS简历:褚旭">
+<meta name="twitter:description" content="#褚旭
+##男|应届毕业生|1993年5月大二接触iOS,大三的时候曾在北京黑马程序员培训现居住于北京| 户口黑龙江-鹤岗身份证:230403199305150216学历:本科|专业:计算机科学与技术手机：13945769567E-mail：6698087@163.com博客地址:[http://tiantianchuxu.com]
+##工作性质：    全职(实习)期望职业：    iOS软件开">
 
 
 
@@ -117,7 +117,7 @@
   };
 </script>
 
-  <title> 蓝牙交互-CoreBlueTooth | 君子性非异也 善假于物也 </title>
+  <title> iOS简历:褚旭 | 君子性非异也 善假于物也 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -267,7 +267,7 @@
             
             
               
-                蓝牙交互-CoreBlueTooth
+                iOS简历:褚旭
               
             
           </h1>
@@ -279,8 +279,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-30T11:23:14+08:00" content="2016-06-30">
-              2016-06-30
+            <time itemprop="dateCreated" datetime="2016-07-12T12:51:17+08:00" content="2016-07-12">
+              2016-07-12
             </time>
           </span>
 
@@ -307,42 +307,24 @@
       
 
       
-        <p>#CoreBlueTooth简介<br>可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上<br>iPad设备必须是iPad mini及以上<br>iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试</p>
-<p>#应用场景<br>     运动手环<br>     智能家居<br>     拉卡拉蓝牙刷卡器</p>
-<p>#核心概念<br>CBCentralManager:中心设备(用来连接到外部设备的管家) CBPeripheralManager:外部设备(第三方的蓝牙4.0设备)</p>
-<p>#实际使用<br>  建立中心管家</p>
-<p>#1. 创建中心管家,并且设置代理<br>self.cmgr = [[CBCentralManager alloc]initWithDelegate:self queue:nil];<br>扫描外设(discover)</p>
-<p>#2. 在代理方法中扫描外部设备 /<em>*<br>scanForPeripheralsWithServices :如果传入指定的数组,那么就只会扫描数组中对应ID </em> 如果传入nil,那么就是扫描所有可以发现的设备<br> 扫描完外部设备就会通知CBCentralManager的代理</p>
-<ul>
-<li>(void)centralManagerDidUpdateState:(CBCentralManager *)central<br>{<br> if ([central state] == CBCentralManagerStatePoweredOn) {<pre><code>[self.cmgr scanForPeripheralsWithServices:nil options:nil];
-</code></pre>} }</li>
-</ul>
-<hr>
-<p>发现外部设备,每发现一个就会调用这个方法<br>所以可以使用一个数组来存储每次扫描完成的数组 </p>
-<ul>
-<li>(void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBP<br>{<br>// 有可能会导致重复添加扫描到的外设<br>// 所以需要先判断数组中是否包含这个外设 if(![self.peripherals containsObject:peripheral]){<pre><code>[self.peripherals addObject:peripheral];
-</code></pre>  }<br>}<br>连接外设</li>
-</ul>
-<ul>
-<li>模拟开始连接方法 */</li>
-</ul>
-<ul>
-<li>(void)start<br>{<br>#3. 连接外设<br>for (CBPeripheral *ppl in self.peripherals) { // 扫描外设的服务<br>// 这个操作应该交给外设的代理方法来做<br>// 设置代理<br>ppl.delegate = self;<br>[self.cmgr connectPeripheral:ppl options:nil];<br>} }<br>扫描外设中的服务和特征<br>#服务和特征的关系<br>每个蓝牙4.0的设备都是通过服务和特征来展示自己的,一个设备必然包含一个或 多个服务,每个服务下面又包含若干个特征。</li>
-</ul>
-<p>#连接外设成功调用</p>
-<ul>
-<li>(void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPe<br>{<br>// 查找外设服务<br>  [peripheral discoverServices:nil];<br>}</li>
-</ul>
-<h1 id="发现服务就会调用代理方法"><a href="#发现服务就会调用代理方法" class="headerlink" title="发现服务就会调用代理方法 *"></a>发现服务就会调用代理方法 *</h1><p> @param peripheral 外设 */</p>
-<ul>
-<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverServices:(NSError </em>)<br>{<br>// 扫描到设备的所有服务<br>NSArray <em>services = peripheral.services; // 根据服务再次扫描每个服务对应的特征<br>for (CBService </em>ses in services) {<pre><code>[peripheral discoverCharacteristics:nil forService:ses];
-</code></pre>  }<br>}</li>
-</ul>
-<h1 id="发现服务对应的特征"><a href="#发现服务对应的特征" class="headerlink" title="发现服务对应的特征"></a>发现服务对应的特征</h1><ul>
-<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverCharacteristicsForSe<br>{<br>// 服务对应的特征<br>NSArray </em>ctcs = service.characteristics; // 遍历所有的特征<br>for (CBCharacteristic *character in ctcs) {<br>// 根据特征的唯一标示过滤<br>if ([character.UUID.UUIDString isEqualToString:@”XMG”]) {<br>NSLog(@”可以吃饭了”); }<br>} }<br>#断开连接</li>
-<li>(void)stop<br>与外设做数据交互<br>在指定的特征下做相应的操作<br>  Chapter-20(I)蓝牙交互CoreBlueTooth 151<br>r<br>e<br>r<br>MISSAJJ IOSDevelopment GitBook<br>{<br>// 断开所有连接上的外设<br>for (CBPeripheral *per in self.peripherals) {<pre><code>[self.cmgr cancelPeripheralConnection:per];
-</code></pre>  }<br>}</li>
-</ul>
+        <p>#褚旭</p>
+<p>##男|应届毕业生|1993年5月<br>大二接触iOS,大三的时候曾在北京黑马程序员培训<br>现居住于北京| 户口黑龙江-鹤岗<br>身份证:230403199305150216<br>学历:本科|专业:计算机科学与技术<br>手机：13945769567<br>E-mail：6698087@163.com<br>博客地址:[<a href="http://tiantianchuxu.com" target="_blank" rel="external">http://tiantianchuxu.com</a>]</p>
+<p>##工作性质：    全职(实习)<br>期望职业：    iOS软件开发工程师(全职/实习)<br>工作地区：    北京<br>期望月薪：    面议<br>目前状况：    目前处于离职状态，可立即上岗</p>
+<p>##工作经历:<br>2015/07 – 2016/4     北京艾的教育科技股份有限公司 </p>
+<pre><code>iOS软件开发工程师(实习-&gt;正式)
+学术/科研| 企业性质：上市公司| 规模：100-499人
+工作描述：最初以实习生的身份加入公司，自主学习iOS开发，由于实习期间表现优秀，实习期结束后正式加入该公司。前期参与技术文件的整理，形成功能设计文档、维护已开发的项目,修复存在的Bug。后期参与需求调研、需求分析、模块设计、系统设计,页面设计,模块开发,保质保量完成工作的同时,跟项目经理和同事交流项目中所涉及的技术。
+</code></pre><p>2015/10 – 2015/12      绘酷</p>
+<pre><code>项目简介：绘酷app是一款集儿童绘本借阅、绘本定制、AR绘本、绘本社区一体的0-6岁学习类教育App。主要版块包括：爱读宝、绘讯、绘本馆、发现等四个版块，旨在为小朋友提供一个丰富多彩的儿童世界。
+1.使用Nav+TabBar架构,采用MVC设计模式
+2.使用LBS实现了项目所需要的地图定位功能
+3.使用支付宝SDK集成了了支付功能
+4.使用友盟SDK实现了第三方分享功能
+5.使用第三方MJExtension解析json文件转换为模型数据
+6.通过NSFileSize计算缓存文件的大小，NSFileManager清除文件缓存
+7. 使用第三方框架SDWebImage处理图片缓存和图片下载
+</code></pre><p>##专业技能<br>    1.熟练使用Xcode开发工具,熟悉Objective-C，熟悉C语言,了解swift语言<br>    2.熟悉AFNetworking、SDWebImage、FMDB、YYModel、MBProgressHUD,等常用第三方框架,对AFNetworking和SDWebImage的底层实现有一定了解.<br>    3.了解音视频、流媒体技术 ;<br>    4.熟悉OC的runtime机制和runloop消息传递机制以及ARC/MRC内存管理 机制<br>    5.熟悉主流SDK集成和使用：友盟，支付宝、融云,极光推送等；<br>    6.熟悉Socket网络编程、http协议 TCP/IP通信机制;<br>    7.熟悉 MVC、代理、单例、工厂、观察者等设计模式；<br>    8.熟悉json的序列化和反序列化、XML的SAX解析 </p>
+<p>##自我评价:<br>    1.为人温和,友善,积极乐观,抗压能力极强<br>    2.学习能力强，喜欢接触新鲜事物<br>    3.富有团队精神,责任感强,工作积极主动<br>    4.对IT行业充满激情,能吃苦耐劳,可以接受加班</p>
 
       
     </div>
@@ -367,17 +349,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/29/蓝牙初步分析/" rel="next" title="蓝牙初步分析">
-                <i class="fa fa-chevron-left"></i> 蓝牙初步分析
+              <a href="/2016/06/30/Mutipeer Connectivity/" rel="next" title="蓝牙交互-Mutipeer Connectivity">
+                <i class="fa fa-chevron-left"></i> 蓝牙交互-Mutipeer Connectivity
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/06/30/Mutipeer Connectivity/" rel="prev" title="蓝牙交互-Mutipeer Connectivity">
-                蓝牙交互-Mutipeer Connectivity <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -477,7 +455,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#发现服务就会调用代理方法"><span class="nav-number">1.</span> <span class="nav-text">发现服务就会调用代理方法 *</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发现服务对应的特征"><span class="nav-number">2.</span> <span class="nav-text">发现服务对应的特征</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目录</p>
             
           </div>
         </section>

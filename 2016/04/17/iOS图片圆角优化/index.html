@@ -84,22 +84,31 @@
 
 
 
-<meta name="description" content="#CoreBlueTooth简介可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上iPad设备必须是iPad mini及以上iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试
-#应用场景     运动手环     智能家居     拉卡拉蓝牙刷卡器
-#核心概念CBCentra">
+<meta name="description" content="iOS图片圆角优化##为什么要进行圆角优化?苹果自带的给图片设置圆角的方法:
+ImageView.clipsToBounds = YES;[ImageView.layer setCornerRadius:50];
+但是这样设置会触发离屏渲染,比较消耗性能,比如一个页面上有十几个头像这样设置圆角会明显感觉到卡顿.
+##设置圆角的方法
+###1.直接使用setCornerRadius
+####这种就是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="蓝牙交互-CoreBlueTooth">
-<meta property="og:url" content="http://.com/2016/06/30/CoreBlueTooth/index.html">
+<meta property="og:title" content="iOS图片圆角优化">
+<meta property="og:url" content="http://.com/2016/04/17/iOS图片圆角优化/index.html">
 <meta property="og:site_name" content="君子性非异也 善假于物也">
-<meta property="og:description" content="#CoreBlueTooth简介可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上iPad设备必须是iPad mini及以上iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试
-#应用场景     运动手环     智能家居     拉卡拉蓝牙刷卡器
-#核心概念CBCentra">
-<meta property="og:updated_time" content="2016-06-30T03:29:47.000Z">
+<meta property="og:description" content="iOS图片圆角优化##为什么要进行圆角优化?苹果自带的给图片设置圆角的方法:
+ImageView.clipsToBounds = YES;[ImageView.layer setCornerRadius:50];
+但是这样设置会触发离屏渲染,比较消耗性能,比如一个页面上有十几个头像这样设置圆角会明显感觉到卡顿.
+##设置圆角的方法
+###1.直接使用setCornerRadius
+####这种就是">
+<meta property="og:updated_time" content="2016-07-12T04:25:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="蓝牙交互-CoreBlueTooth">
-<meta name="twitter:description" content="#CoreBlueTooth简介可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上iPad设备必须是iPad mini及以上iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试
-#应用场景     运动手环     智能家居     拉卡拉蓝牙刷卡器
-#核心概念CBCentra">
+<meta name="twitter:title" content="iOS图片圆角优化">
+<meta name="twitter:description" content="iOS图片圆角优化##为什么要进行圆角优化?苹果自带的给图片设置圆角的方法:
+ImageView.clipsToBounds = YES;[ImageView.layer setCornerRadius:50];
+但是这样设置会触发离屏渲染,比较消耗性能,比如一个页面上有十几个头像这样设置圆角会明显感觉到卡顿.
+##设置圆角的方法
+###1.直接使用setCornerRadius
+####这种就是">
 
 
 
@@ -117,7 +126,7 @@
   };
 </script>
 
-  <title> 蓝牙交互-CoreBlueTooth | 君子性非异也 善假于物也 </title>
+  <title> iOS图片圆角优化 | 君子性非异也 善假于物也 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -267,7 +276,7 @@
             
             
               
-                蓝牙交互-CoreBlueTooth
+                iOS图片圆角优化
               
             
           </h1>
@@ -279,8 +288,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-30T11:23:14+08:00" content="2016-06-30">
-              2016-06-30
+            <time itemprop="dateCreated" datetime="2016-04-17T16:32:17+08:00" content="2016-04-17">
+              2016-04-17
             </time>
           </span>
 
@@ -307,43 +316,60 @@
       
 
       
-        <p>#CoreBlueTooth简介<br>可用于第三方蓝牙设备交互,设备必须支持蓝牙4.0 iPhone的设备必须是4S及以上<br>iPad设备必须是iPad mini及以上<br>iOS的系统必须是iOS 6及以上 蓝牙4.0以低功耗著称,所以一般被称为BLE(bluetooth low energy) 使用模拟器调试</p>
-<p>#应用场景<br>     运动手环<br>     智能家居<br>     拉卡拉蓝牙刷卡器</p>
-<p>#核心概念<br>CBCentralManager:中心设备(用来连接到外部设备的管家) CBPeripheralManager:外部设备(第三方的蓝牙4.0设备)</p>
-<p>#实际使用<br>  建立中心管家</p>
-<p>#1. 创建中心管家,并且设置代理<br>self.cmgr = [[CBCentralManager alloc]initWithDelegate:self queue:nil];<br>扫描外设(discover)</p>
-<p>#2. 在代理方法中扫描外部设备 /<em>*<br>scanForPeripheralsWithServices :如果传入指定的数组,那么就只会扫描数组中对应ID </em> 如果传入nil,那么就是扫描所有可以发现的设备<br> 扫描完外部设备就会通知CBCentralManager的代理</p>
+        <h1 id="iOS图片圆角优化"><a href="#iOS图片圆角优化" class="headerlink" title="iOS图片圆角优化"></a>iOS图片圆角优化</h1><p>##为什么要进行圆角优化?<br>苹果自带的给图片设置圆角的方法:</p>
+<p>ImageView.clipsToBounds = YES;<br>[ImageView.layer setCornerRadius:50];</p>
+<p>但是这样设置会触发离屏渲染,比较消耗性能,比如一个页面上有十几个头像这样设置圆角会明显感觉到卡顿.</p>
+<p>##设置圆角的方法</p>
+<p>###1.直接使用setCornerRadius</p>
+<p>####这种就是最常用的，也是最耗性能的。</p>
+<p>setCornerRadius设置圆角之后，shouldRasterize=YES光栅化</p>
+<p>avatarImageView.clipsToBounds = YES; [avatarImageView.layer setCornerRadius:50]; avatarImageView.layer.shouldRasterize = YES;</p>
+<p>shouldRasterize=YES设置光栅化，可以使离屏渲染的结果缓存到内存中存为位图， 使用的时候直接使用缓存，节省了一直离屏渲染损耗的性能。</p>
+<p>但是如果layer及sublayers常常改变的话，它就会一直不停的渲染及删除缓存重新 创建缓存，所以这种情况下建议不要使用光栅化，这样也是比较损耗性能的。</p>
+<p>问题：我发现UIImageView上加载网络图片使用光栅化会有一点模糊，而UIButton 上使用光栅化没有模糊，不知道为什么？求大神解答！</p>
+<p>###2.直接覆盖一张中间为圆形透明的图片</p>
+<p>这种方法就是多加了一张透明的图片，GPU计算多层的混合渲染blending也是会消耗 一点性能的，但比第一种方法还是好上很多的。</p>
+<p>Core Graphics绘制圆角</p>
+<p>####这种方式性能最好，但是UIButton上不知道怎么绘制，可以用UIimageView添加个 点击手势当做UIButton使用。</p>
+<p>  UIGraphicsBeginImageContextWithOptions(avatarImageView.bounds.size, NO, [UIScreen mainScreen].scale);<br>  [[UIBezierPath bezierPathWithRoundedRect:avatarImageView.bounds cornerRadius:50] addClip];<br>  [image drawInRect:avatarImageView.bounds];<br>  avatarImageView.image = UIGraphicsGetImageFromCurrentImageContext();<br>  UIGraphicsEndImageContext();<br>这段方法可以写在SDWebImage的completed回调里，也可以在UIImageView+WebCache.h 里添加一个方法，isClipRound判断是否切圆角，把上面绘制圆角的方法封装到里面。</p>
 <ul>
-<li>(void)centralManagerDidUpdateState:(CBCentralManager *)central<br>{<br> if ([central state] == CBCentralManagerStatePoweredOn) {<pre><code>[self.cmgr scanForPeripheralsWithServices:nil options:nil];
-</code></pre>} }</li>
+<li>(void)sd_setImageWithURL:(NSURL <em>)url placeholderImage:(UIImage </em>)placeholder options:(SDWebImageOptions)options isClipRound:(BOOL)isRound progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletionBlock)completedBlock;<br>使用Instruments的Core Animation查看性能</li>
 </ul>
-<hr>
-<p>发现外部设备,每发现一个就会调用这个方法<br>所以可以使用一个数组来存储每次扫描完成的数组 </p>
-<ul>
-<li>(void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBP<br>{<br>// 有可能会导致重复添加扫描到的外设<br>// 所以需要先判断数组中是否包含这个外设 if(![self.peripherals containsObject:peripheral]){<pre><code>[self.peripherals addObject:peripheral];
-</code></pre>  }<br>}<br>连接外设</li>
-</ul>
-<ul>
-<li>模拟开始连接方法 */</li>
-</ul>
-<ul>
-<li>(void)start<br>{<br>#3. 连接外设<br>for (CBPeripheral *ppl in self.peripherals) { // 扫描外设的服务<br>// 这个操作应该交给外设的代理方法来做<br>// 设置代理<br>ppl.delegate = self;<br>[self.cmgr connectPeripheral:ppl options:nil];<br>} }<br>扫描外设中的服务和特征<br>#服务和特征的关系<br>每个蓝牙4.0的设备都是通过服务和特征来展示自己的,一个设备必然包含一个或 多个服务,每个服务下面又包含若干个特征。</li>
-</ul>
-<p>#连接外设成功调用</p>
-<ul>
-<li>(void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPe<br>{<br>// 查找外设服务<br>  [peripheral discoverServices:nil];<br>}</li>
-</ul>
-<h1 id="发现服务就会调用代理方法"><a href="#发现服务就会调用代理方法" class="headerlink" title="发现服务就会调用代理方法 *"></a>发现服务就会调用代理方法 *</h1><p> @param peripheral 外设 */</p>
-<ul>
-<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverServices:(NSError </em>)<br>{<br>// 扫描到设备的所有服务<br>NSArray <em>services = peripheral.services; // 根据服务再次扫描每个服务对应的特征<br>for (CBService </em>ses in services) {<pre><code>[peripheral discoverCharacteristics:nil forService:ses];
-</code></pre>  }<br>}</li>
-</ul>
-<h1 id="发现服务对应的特征"><a href="#发现服务对应的特征" class="headerlink" title="发现服务对应的特征"></a>发现服务对应的特征</h1><ul>
-<li>(void)peripheral:(CBPeripheral <em>)peripheral didDiscoverCharacteristicsForSe<br>{<br>// 服务对应的特征<br>NSArray </em>ctcs = service.characteristics; // 遍历所有的特征<br>for (CBCharacteristic *character in ctcs) {<br>// 根据特征的唯一标示过滤<br>if ([character.UUID.UUIDString isEqualToString:@”XMG”]) {<br>NSLog(@”可以吃饭了”); }<br>} }<br>#断开连接</li>
-<li>(void)stop<br>与外设做数据交互<br>在指定的特征下做相应的操作<br>  Chapter-20(I)蓝牙交互CoreBlueTooth 151<br>r<br>e<br>r<br>MISSAJJ IOSDevelopment GitBook<br>{<br>// 断开所有连接上的外设<br>for (CBPeripheral *per in self.peripherals) {<pre><code>[self.cmgr cancelPeripheralConnection:per];
-</code></pre>  }<br>}</li>
-</ul>
+<p>Color Offscreen-Rendered Yellow</p>
+<p>开启后会把那些需要离屏渲染的图层高亮成黄色，这就意味着黄色图层可能存在性能问题。</p>
+<p>Color Hits Green and Misses Red</p>
+<p>如果shouldRasterize被设置成YES，对应的渲染结果会被缓存，如果图层是绿色，就表示这些缓存被复用；如果是红色就表示缓存会被重复创建，这就表示该处存在性能问题了。</p>
+<p>用Instruments测试得</p>
+<p>####第一种方法，ios9.0之前UIImageView和UIButton都高亮为黄色。ios9.0之后只有UIButton高亮为黄色。</p>
+<p>####第二种方法UIImageView和UIButton都高亮为绿色，但UIImageView加载网络图片后会有一点模糊</p>
+<p>####第三种方法无任何高亮，说明没离屏渲染</p>
+<p>####第四种方法无任何高亮，说明没离屏渲染</p>
+<p>#一行代码设置图片圆角</p>
+<p>##图片圆角渲染工具HJCornerRadius，其最大优势在于使用简单，一行搞定图片圆角</p>
+<p>1.<br>imageview.aliCornerRadius = 5.0f;<br>核心思想就是使用圆角图片替换系统圆角。实际使用时，确保layer对象的masksToBounds属性为NO</p>
+<p>2.<br>imageview.layer.masksToBounds = NO</p>
+<p>3.<br>pod ‘HJCornerRadius’, :git =&gt; “<a href="https://github.com/panghaijiao/HJCornerRadius.git" target="_blank" rel="external">https://github.com/panghaijiao/HJCornerRadius.git</a>“</p>
+<p>RunLoop的适当切换</p>
+<p>##工具原理<br>这个工具并不是直接渲染原始Image对象，而是先截取UIImageView视图Layer生成的Image，然后再做渲染。原因很简单，因为UIImageView呈现方式涉及多种ContentMode，通过渲染UIImageView视图Layer生成的图片可以巧妙的解决UIImageView显示模式的问题</p>
+<p>此外，由于系统原因，对于像UITableViewCell的UIImageView，第一次创建赋图时，可能无法获取UIImageView视图Layer的图片，此时，可以通过切换异步RunLoop达到延时渲染的目的</p>
+<p>众所周知，截图渲染的逻辑是可以运行在工作线程，但是本工具并没有把它们放在工作线程执行，因为放在工作线程会有延迟，从而导致图片闪烁的现象</p>
+<p>具体截图渲染代码如下</p>
+<p>UIGraphicsBeginImageContextWithOptions(self.originImageView.bounds.size, NO, [UIScreen mainScreen].scale);</p>
+<pre><code>CGContextRef currnetContext = UIGraphicsGetCurrentContext();
+CGContextAddPath(currnetContext, [UIBezierPath bezierPathWithRoundedRect:self.originImageView.bounds cornerRadius:self.cornerRadius].CGPath);
+CGContextClip(currnetContext);
+[self.originImageView.layer renderInContext:currnetContext];
+UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+UIGraphicsEndImageContext();
 
+if ([image isKindOfClass:[UIImage class]]) {
+    image.aliCornerRadius = YES;
+    self.originImageView.image = image;
+} else {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateImageView];
+    });
+</code></pre>
       
     </div>
 
@@ -367,16 +393,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/06/29/蓝牙初步分析/" rel="next" title="蓝牙初步分析">
-                <i class="fa fa-chevron-left"></i> 蓝牙初步分析
+              <a href="/2016/02/25/RunLoop原理和核心机制/" rel="next" title="RunLoop原理及核心机制">
+                <i class="fa fa-chevron-left"></i> RunLoop原理及核心机制
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2016/06/30/Mutipeer Connectivity/" rel="prev" title="蓝牙交互-Mutipeer Connectivity">
-                蓝牙交互-Mutipeer Connectivity <i class="fa fa-chevron-right"></i>
+              <a href="/2016/06/29/蓝牙初步分析/" rel="prev" title="蓝牙初步分析">
+                蓝牙初步分析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -477,7 +503,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#发现服务就会调用代理方法"><span class="nav-number">1.</span> <span class="nav-text">发现服务就会调用代理方法 *</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发现服务对应的特征"><span class="nav-number">2.</span> <span class="nav-text">发现服务对应的特征</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iOS图片圆角优化"><span class="nav-number">1.</span> <span class="nav-text">iOS图片圆角优化</span></a></li></ol></div>
             
           </div>
         </section>
